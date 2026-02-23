@@ -395,22 +395,60 @@ html[lang="lo"] button {
 
 /* Buttons */
 .btn-primary-gradient {
-    background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+    background: var(--md-sys-color-primary);
     border: none;
-    color: white;
+    color: var(--md-sys-color-on-primary);
     padding: 12px 24px;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    transition: all 0.3s;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    border-radius: var(--md-sys-shape-corner-full);
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: none;
 }
 
 .btn-primary-gradient:hover {
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-    transform: translateY(-2px);
-    color: white;
-    filter: brightness(1.1);
+    box-shadow: var(--md-sys-elevation-1);
+    color: var(--md-sys-color-on-primary);
 }
+
+/* M3 Filled Tonal Buttons */
+.btn-m3-tonal {
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    cursor: pointer;
+    display: inline-flex;
+}
+
+.btn-m3-tonal:hover {
+    box-shadow: var(--md-sys-elevation-1);
+}
+
+.btn-m3-tonal-primary {
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+}
+.btn-m3-tonal-primary:hover { color: var(--md-sys-color-on-primary-container); }
+
+.btn-m3-tonal-success {
+    background: #C4EED0;
+    color: #002106;
+}
+.btn-m3-tonal-success:hover { color: #002106; }
+
+.btn-m3-tonal-warning {
+    background: #FFDDB3;
+    color: #261900;
+}
+.btn-m3-tonal-warning:hover { color: #261900; }
+
+.btn-m3-tonal-purple {
+    background: #EADDFF;
+    color: #21005D;
+}
+.btn-m3-tonal-purple:hover { color: #21005D; }
 
 .btn-icon {
     width: 40px;

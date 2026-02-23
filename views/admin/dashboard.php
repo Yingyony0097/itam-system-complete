@@ -313,34 +313,34 @@ include __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="glass-card p-4">
-                <h3 class="mb-3" style="font-size: 20px; font-weight: 600; color: var(--gray-800);">
-                    <i class="bi bi-lightning-charge" style="width: 20px; height: 20px; margin-right: 8px;"></i>
-                    Quick Actions
+                <h3 class="mb-3" style="font-size: 18px; font-weight: 600; color: var(--md-sys-color-on-surface);">
+                    <i class="bi bi-lightning-charge me-2"></i>
+                    <?php echo e(tr('Quick Actions')); ?>
                 </h3>
 
                 <div class="row g-3">
                     <div class="col-6 col-md-3">
-                        <a href="/views/admin/assets.php?action=add" class="btn btn-primary w-100 d-flex flex-column align-items-center gap-2 py-3">
+                        <a href="/views/admin/assets.php?action=add" class="btn-m3-tonal btn-m3-tonal-primary w-100 d-flex flex-column align-items-center gap-2 py-3">
                             <i class="bi bi-plus-circle" style="font-size: 24px;"></i>
-                            <span>Add Asset</span>
+                            <span><?php echo e(tr('Add Asset')); ?></span>
                         </a>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a href="/views/admin/users.php?action=add" class="btn w-100 d-flex flex-column align-items-center gap-2 py-3" style="background: linear-gradient(135deg, var(--color-success), #059669); color: white;">
+                        <a href="/views/admin/users.php?action=add" class="btn-m3-tonal btn-m3-tonal-success w-100 d-flex flex-column align-items-center gap-2 py-3">
                             <i class="bi bi-person-plus" style="font-size: 24px;"></i>
-                            <span>Add User</span>
+                            <span><?php echo e(tr('Add User')); ?></span>
                         </a>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a href="/views/admin/checkout.php" class="btn w-100 d-flex flex-column align-items-center gap-2 py-3" style="background: linear-gradient(135deg, var(--color-warning), #d97706); color: white;">
+                        <a href="/views/admin/checkout.php" class="btn-m3-tonal btn-m3-tonal-warning w-100 d-flex flex-column align-items-center gap-2 py-3">
                             <i class="bi bi-arrow-left-right" style="font-size: 24px;"></i>
-                            <span>Check Out</span>
+                            <span><?php echo e(tr('Check Out')); ?></span>
                         </a>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a href="/views/admin/reports.php" class="btn w-100 d-flex flex-column align-items-center gap-2 py-3" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">
+                        <a href="/views/admin/reports.php" class="btn-m3-tonal btn-m3-tonal-purple w-100 d-flex flex-column align-items-center gap-2 py-3">
                             <i class="bi bi-file-text" style="font-size: 24px;"></i>
-                            <span>Reports</span>
+                            <span><?php echo e(tr('Reports')); ?></span>
                         </a>
                     </div>
                 </div>
