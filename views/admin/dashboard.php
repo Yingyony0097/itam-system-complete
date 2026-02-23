@@ -296,23 +296,49 @@ include __DIR__ . '/../layouts/sidebar.php';
 
                         <?php
                         $categories = $data['categories'] ?? [];
-                        $catLabels = [];
-                        $catCounts = [];
+                        $m3Colors = ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#0EA5E9', '#14B8A6', '#F97316', '#6366F1'];
+                        $totalCategoryItems = 0;
                         foreach ($categories as $cat) {
-                            $catLabels[] = $cat['category'] ?? 'Unknown';
-                            $catCounts[] = (int)($cat['asset_count'] ?? $cat['count'] ?? 0);
+                            $totalCategoryItems += (int)($cat['asset_count'] ?? $cat['count'] ?? 0);
                         }
                         ?>
 
-                        <?php if (empty($catLabels)): ?>
+                        <?php if (empty($categories)): ?>
                             <p class="text-center py-4 m-0" style="color: var(--md-sys-color-on-surface-variant);">
                                 <?php echo e(tr('No category data')); ?>
                             </p>
                         <?php else: ?>
-                            <div style="position: relative; max-width: 260px; margin: 0 auto;">
-                                <canvas id="categoryDoughnut"></canvas>
+                            <div class="category-list">
+                                <?php foreach ($categories as $index => $category): ?>
+                                    <?php
+                                    $categoryName = trim((string)($category['category'] ?? ''));
+                                    if ($categoryName === '') $categoryName = 'Unknown';
+                                    $categoryCount = (int)($category['asset_count'] ?? $category['count'] ?? 0);
+                                    $categoryPercent = $totalCategoryItems > 0
+                                        ? (int)round(($categoryCount / $totalCategoryItems) * 100)
+                                        : 0;
+                                    $categoryColor = $m3Colors[$index % count($m3Colors)];
+                                    ?>
+                                    <div class="category-item mb-3">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <span class="fw-medium" style="font-size: 14px; color: var(--md-sys-color-on-surface-variant);">
+                                                <?php echo e(tr($categoryName)); ?>
+                                            </span>
+                                            <span class="fw-semibold" style="font-size: 14px; color: var(--md-sys-color-on-surface);">
+                                                <?php echo $categoryCount; ?> <?php echo e(tr($categoryCount === 1 ? 'item' : 'items')); ?>
+                                            </span>
+                                        </div>
+                                        <div class="progress" style="height: 8px; background: var(--md-sys-color-surface-container-highest); border-radius: 4px;">
+                                            <div class="progress-bar"
+                                                 role="progressbar"
+                                                 style="width: <?php echo $categoryPercent; ?>%; background: <?php echo e($categoryColor); ?>; border-radius: 4px;"
+                                                 aria-valuenow="<?php echo $categoryPercent; ?>"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-                            <div id="categoryLegend" class="mt-3"></div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -410,64 +436,6 @@ var totalTrendData = <?php echo json_encode(array_column($data['total_trend'] ??
 var availTrendData = <?php echo json_encode(array_column($data['available_trend'] ?? [], 'available')); ?>;
 drawSparkline('sparkTotal', totalTrendData, '#4355B9');
 drawSparkline('sparkAvailable', availTrendData, '#386A20');
-
-<?php if (!empty($catLabels)): ?>
-// Doughnut Chart for Assets by Category
-(function() {
-    var labels = <?php echo json_encode($catLabels, JSON_UNESCAPED_UNICODE); ?>;
-    var counts = <?php echo json_encode($catCounts); ?>;
-    var m3Colors = ['#4355B9','#386A20','#7D5700','#7B5EA7','#984061','#00687A','#5D5F5F','#6B5778','#006D3B'];
-
-    var ctx = document.getElementById('categoryDoughnut');
-    if (!ctx) return;
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: labels.map(function(l) { return translateText(l); }),
-            datasets: [{
-                data: counts,
-                backgroundColor: m3Colors.slice(0, labels.length),
-                borderWidth: 0,
-                spacing: 2,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            cutout: '65%',
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#FFFFFF',
-                    titleColor: '#1B1B22',
-                    bodyColor: '#46464F',
-                    borderColor: '#C7C5D0',
-                    borderWidth: 1,
-                    cornerRadius: 12,
-                    padding: 12
-                }
-            }
-        }
-    });
-
-    // Custom legend
-    var legendEl = document.getElementById('categoryLegend');
-    if (legendEl) {
-        legendEl.innerHTML = labels.map(function(label, i) {
-            var tLabel = translateText(label);
-            return '<div class="d-flex align-items-center justify-content-between mb-2">' +
-                '<div class="d-flex align-items-center gap-2">' +
-                '<span style="width:12px;height:12px;border-radius:3px;background:' + m3Colors[i % m3Colors.length] + ';display:inline-block;flex-shrink:0;"></span>' +
-                '<span style="font-size:14px;color:var(--md-sys-color-on-surface);">' + tLabel + '</span>' +
-                '</div>' +
-                '<span style="font-size:14px;font-weight:600;color:var(--md-sys-color-on-surface);">' + counts[i] + ' ' + translateText('items') + '</span>' +
-                '</div>';
-        }).join('');
-    }
-})();
-<?php endif; ?>
 </script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
-
