@@ -223,13 +223,13 @@ include __DIR__ . '/../layouts/sidebar.php';
                 <div class="col-12 col-lg-7">
                     <div class="glass-card p-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h3 class="m-0" style="font-size: 20px; font-weight: 600; color: var(--gray-800);">
-                                <i class="bi bi-activity" style="width: 20px; height: 20px; margin-right: 8px;"></i>
-                                Recent Activities
+                            <h3 class="m-0" style="font-size: 18px; font-weight: 600; color: var(--md-sys-color-on-surface);">
+                                <i class="bi bi-activity me-2" style="font-size: 18px;"></i>
+                                <?php echo e(tr('Recent Activities')); ?>
                             </h3>
-                            <a href="/views/admin/history.php" class="btn btn-sm btn-secondary" style="font-size: 13px;">
-                                View All
-                                <i class="bi bi-arrow-right" style="font-size: 14px;"></i>
+                            <a href="/views/admin/history.php" class="btn-m3-tonal btn-m3-tonal-primary px-3 py-1" style="font-size: 13px; border-radius: var(--md-sys-shape-corner-full);">
+                                <?php echo e(tr('View All')); ?>
+                                <i class="bi bi-arrow-right ms-1" style="font-size: 14px;"></i>
                             </a>
                         </div>
 
@@ -239,32 +239,45 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <?php else: ?>
                                 <?php foreach ($data['recent_activity'] as $activity): ?>
                                     <?php
-                                    $isCheckOut = ($activity['action_type'] ?? '') === 'Check Out';
-                                    $iconBg = $isCheckOut ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)';
-                                    $iconColor = $isCheckOut ? 'var(--color-warning)' : 'var(--color-success)';
-                                    $iconClass = $isCheckOut ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle';
+                                    $actionType = $activity['action_type'] ?? '';
+                                    if ($actionType === 'Check Out') {
+                                        $iconBg = '#FFDDB3';
+                                        $iconColor = '#7D5700';
+                                        $iconClass = 'bi-arrow-up-circle';
+                                        $statusClass = 'status-checkout';
+                                    } elseif ($actionType === 'Overdue') {
+                                        $iconBg = '#FFDAD6';
+                                        $iconColor = '#BA1A1A';
+                                        $iconClass = 'bi-exclamation-circle';
+                                        $statusClass = 'status-overdue';
+                                    } else {
+                                        $iconBg = '#C4EED0';
+                                        $iconColor = '#386A20';
+                                        $iconClass = 'bi-arrow-down-circle';
+                                        $statusClass = 'status-checkin';
+                                    }
                                     ?>
-                                    <div class="activity-item d-flex align-items-center gap-3 p-3 mb-2" style="background: var(--gray-50); border-radius: 12px; transition: all 0.3s ease;">
+                                    <div class="activity-item d-flex align-items-center gap-3 p-3 mb-2 <?php echo $statusClass; ?>" style="background: var(--md-sys-color-surface-container-lowest); border-radius: 12px;">
                                         <div class="activity-icon" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: <?php echo $iconBg; ?>;">
                                             <i class="bi <?php echo $iconClass; ?>" style="font-size: 20px; color: <?php echo $iconColor; ?>;"></i>
                                         </div>
 
                                         <div class="flex-grow-1">
-                                            <p class="m-0 fw-semibold" style="font-size: 14px; color: var(--gray-800);">
-                                                <?php echo e($activity['action_type'] ?? ''); ?>: <?php echo e($activity['asset_name'] ?? ''); ?>
+                                            <p class="m-0 fw-semibold" style="font-size: 14px; color: var(--md-sys-color-on-surface);">
+                                                <?php echo e(tr($activity['action_type'] ?? '')); ?>: <?php echo e($activity['asset_name'] ?? ''); ?>
                                             </p>
-                                            <p class="m-0" style="font-size: 12px; color: var(--gray-600);">
+                                            <p class="m-0" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                                 <?php echo e($activity['user_name'] ?? ''); ?>
                                                 &bull;
-                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 11px;">
+                                                <span class="badge" style="font-size: 11px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);">
                                                     <?php echo e($activity['asset_code'] ?? ''); ?>
                                                 </span>
                                             </p>
                                         </div>
 
                                         <div class="text-end">
-                                            <p class="m-0" style="font-size: 12px; color: var(--gray-600);">
-                                                <?php echo e(itam_time_ago($activity['action_date'] ?? '')); ?>
+                                            <p class="m-0" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
+                                                <?php echo e(tr(itam_time_ago($activity['action_date'] ?? ''))); ?>
                                             </p>
                                         </div>
                                     </div>
