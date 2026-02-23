@@ -23,11 +23,15 @@ class DashboardController {
         $stats = $this->assetModel->getStatistics();
         $recentActivity = $this->checkLogModel->getRecentActivity(5);
         $categories = $this->assetModel->getByCategory();
+        $totalTrend = $this->assetModel->getDailyTrend(7);
+        $availableTrend = $this->assetModel->getAvailableTrend(7);
 
         return [
             'stats' => $stats,
             'recent_activity' => $recentActivity,
-            'categories' => $categories
+            'categories' => $categories,
+            'total_trend' => $totalTrend,
+            'available_trend' => $availableTrend,
         ];
     }
 

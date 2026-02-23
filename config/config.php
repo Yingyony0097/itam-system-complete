@@ -364,6 +364,7 @@ function uiTextMap() {
         'No assets currently in use' => 'ບໍ່ມີຊັບສິນທີ່ກຳລັງໃຊ້',
         'No matches found' => 'ບໍ່ພົບຂໍ້ມູນທີ່ກົງ',
         'Search assets, users...' => 'ຄົ້ນຫາຊັບສິນ, ຜູ້ໃຊ້...',
+        '7-day trend' => 'ແນວໂນ້ມ 7 ມື້',
         'Available assets' => 'ຊັບສິນທີ່ພ້ອມໃຊ້',
         'Assets in use' => 'ຊັບສິນທີ່ກຳລັງໃຊ້',
         'Unknown' => 'ບໍ່ຮູ້ຈັກ',

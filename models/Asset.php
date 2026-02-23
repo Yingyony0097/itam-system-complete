@@ -152,5 +152,37 @@ class Asset extends Model {
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
+
+    // Get daily total asset count for the last 7 days
+    public function getDailyTrend($days = 7) {
+        $sql = "
+            SELECT DATE(d.day) as day_date, COUNT(a.asset_id) as total
+            FROM (
+                SELECT CURDATE() - INTERVAL n DAY as day
+                FROM (SELECT 0 n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6) nums
+            ) d
+            LEFT JOIN {$this->table} a ON DATE(a.created_at) <= d.day
+            GROUP BY d.day
+            ORDER BY d.day ASC
+        ";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+
+    // Get daily available asset count for the last 7 days
+    public function getAvailableTrend($days = 7) {
+        $sql = "
+            SELECT DATE(d.day) as day_date,
+                   (SELECT COUNT(*) FROM {$this->table} WHERE status = ? AND DATE(created_at) <= d.day) as available
+            FROM (
+                SELECT CURDATE() - INTERVAL n DAY as day
+                FROM (SELECT 0 n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6) nums
+            ) d
+            ORDER BY d.day ASC
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([STATUS_AVAILABLE]);
+        return $stmt->fetchAll();
+    }
 }
 ?>

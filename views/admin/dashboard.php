@@ -152,9 +152,9 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <div>
                                 <p class="stat-label m-0"><?php echo e(tr('Total Assets')); ?></p>
                                 <h2 class="stat-value m-0"><?php echo $totalAssets; ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
-                                    <i class="bi bi-trending-up" style="font-size: 14px;"></i>
-                                    <?php echo e(tr('All assets')); ?>
+                                <p class="m-0 mt-1 d-flex align-items-center gap-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
+                                    <canvas id="sparkTotal" width="60" height="20" style="vertical-align:middle;"></canvas>
+                                    <span><?php echo e(tr('7-day trend')); ?></span>
                                 </p>
                             </div>
                             <div class="stat-icon primary" style="margin-bottom: 0;">
@@ -170,9 +170,9 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <div>
                                 <p class="stat-label m-0"><?php echo e(tr('Available')); ?></p>
                                 <h2 class="stat-value m-0"><?php echo $availableAssets; ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
-                                    <i class="bi bi-check-circle" style="font-size: 14px;"></i>
-                                    <?php echo $availablePct; ?>% <?php echo e(tr('Available')); ?>
+                                <p class="m-0 mt-1 d-flex align-items-center gap-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
+                                    <canvas id="sparkAvailable" width="60" height="20" style="vertical-align:middle;"></canvas>
+                                    <span><?php echo $availablePct; ?>%</span>
                                 </p>
                             </div>
                             <div class="stat-icon success" style="margin-bottom: 0;">
@@ -358,6 +358,39 @@ include __DIR__ . '/../layouts/sidebar.php';
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
+
+// Sparkline renderer
+function drawSparkline(canvasId, dataPoints, color) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas || !dataPoints || !dataPoints.length) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width, h = canvas.height;
+    var nums = dataPoints.map(Number);
+    var min = Math.min.apply(null, nums);
+    var max = Math.max.apply(null, nums);
+    var range = max - min || 1;
+    var step = w / (nums.length - 1 || 1);
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    nums.forEach(function(val, i) {
+        var x = i * step;
+        var y = h - ((val - min) / range) * (h - 4) - 2;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+}
+
+var totalTrendData = <?php echo json_encode(array_column($data['total_trend'] ?? [], 'total')); ?>;
+var availTrendData = <?php echo json_encode(array_column($data['available_trend'] ?? [], 'available')); ?>;
+drawSparkline('sparkTotal', totalTrendData, '#4355B9');
+drawSparkline('sparkAvailable', availTrendData, '#386A20');
 
 <?php if (!empty($categories)): ?>
 // Doughnut Chart for Assets by Category
