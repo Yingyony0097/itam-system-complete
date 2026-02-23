@@ -440,6 +440,17 @@ function initGlobalSearch() {
         }
 
         searchResults.innerHTML = data.results.map(function(item) {
+            if (item.type === 'user') {
+                var roleColor = item.role === 'admin' ? 'color:#7D5700' : 'color:#386A20';
+                return '<a href="' + item.url + '" class="m3-search-result-item">' +
+                    '<i class="bi bi-person-circle" style="font-size:20px;color:var(--md-sys-color-tertiary)"></i>' +
+                    '<div class="flex-grow-1"><div class="fw-medium">' + translateText(item.name) + '</div>' +
+                    '<small style="color:var(--md-sys-color-on-surface-variant)">' +
+                    item.email + '</small></div>' +
+                    '<span style="font-size:12px;font-weight:500;' + roleColor + '">' +
+                    translateText(item.role.charAt(0).toUpperCase() + item.role.slice(1)) + '</span>' +
+                    '</a>';
+            }
             var statusColor = item.status === 'Available'
                 ? 'color:#386A20' : 'color:#7D5700';
             return '<a href="' + item.url + '" class="m3-search-result-item">' +
