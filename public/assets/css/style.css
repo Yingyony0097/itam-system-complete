@@ -273,10 +273,9 @@ html[lang="lo"] button {
 /* Header */
 .top-header {
     height: 70px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: var(--shadow-sm);
+    background: var(--md-sys-color-surface-container-low);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: var(--md-sys-elevation-1);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -854,11 +853,10 @@ html[lang="lo"] button {
 }
 
 .toast-glass {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: var(--shadow-lg);
+    background: var(--md-sys-color-surface-container-low);
+    border-radius: var(--md-sys-shape-corner-medium);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: var(--md-sys-elevation-3);
 }
 
 .activity-list {
