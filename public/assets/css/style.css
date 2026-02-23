@@ -883,18 +883,40 @@ html[lang="lo"] button {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
 }
 
+/* Sidebar Overlay (mobile scrim) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.32);
+    z-index: 999;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
+        box-shadow: none;
     }
 
     .sidebar.open {
         transform: translateX(0);
+        box-shadow: var(--md-sys-elevation-3);
+    }
+
+    .sidebar.open + .sidebar-overlay {
+        display: block;
     }
 
     .main-content {
         margin-left: 0;
+    }
+
+    .m3-search-container {
+        max-width: 100%;
     }
 
     .stat-value {

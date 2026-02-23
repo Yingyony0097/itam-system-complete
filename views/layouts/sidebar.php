@@ -96,3 +96,4 @@ $isAdmin = isAdmin();
         (c) 2026 P-line Co.
     </div>
 </aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
