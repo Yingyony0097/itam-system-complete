@@ -1,4 +1,4 @@
-/* ITAM System - Main Stylesheet with Glassmorphism Design */
+/* ITAM System - Main Stylesheet with Material Design 3 */
 
 @font-face {
     font-family: "Phetsarath OT";
@@ -7,26 +7,43 @@
 }
 
 :root {
-    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --font-family-lao: "Noto Sans Lao", "Phetsarath OT", "Phetsarath", "Segoe UI", Arial, sans-serif;
 
-    /* Primary Colors */
-    --color-primary: #2563EB;
-    --color-primary-dark: #1E40AF;
-    --color-secondary: #7C3AED;
-    --color-success: #10B981;
-    --color-warning: #F59E0B;
-    --color-error: #EF4444;
-    --color-info: #3B82F6;
+    /* M3 Color Tokens */
+    --md-sys-color-primary: #4355B9;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #DEE0FF;
+    --md-sys-color-on-primary-container: #00105C;
+    --md-sys-color-surface: #FFFBFF;
+    --md-sys-color-surface-variant: #E2E1EC;
+    --md-sys-color-on-surface: #1B1B22;
+    --md-sys-color-on-surface-variant: #46464F;
+    --md-sys-color-outline: #777680;
+    --md-sys-color-outline-variant: #C7C5D0;
+    --md-sys-color-surface-container-lowest: #FFFFFF;
+    --md-sys-color-surface-container-low: #F5F2FA;
+    --md-sys-color-surface-container: #EFEDF5;
+    --md-sys-color-surface-container-high: #E9E7EF;
+    --md-sys-color-surface-container-highest: #E4E1E9;
 
-    /* Gray Scale */
-    --gray-50: #F9FAFB;
-    --gray-100: #F3F4F6;
-    --gray-200: #E5E7EB;
-    --gray-300: #D1D5DB;
-    --gray-600: #4B5563;
-    --gray-700: #374151;
-    --gray-800: #1F2937;
+    /* Backward-compatible color aliases */
+    --color-primary: #4355B9;
+    --color-primary-dark: #2A3990;
+    --color-secondary: #5B5D72;
+    --color-success: #386A20;
+    --color-warning: #7D5700;
+    --color-error: #BA1A1A;
+    --color-info: #4355B9;
+
+    /* Gray scale mapped to M3 neutral */
+    --gray-50: #FFFBFF;
+    --gray-100: #F5F2FA;
+    --gray-200: #E4E1E9;
+    --gray-300: #C7C5D0;
+    --gray-600: #46464F;
+    --gray-700: #303038;
+    --gray-800: #1B1B22;
 
     /* Spacing */
     --spacing-xs: 4px;
@@ -35,16 +52,26 @@
     --spacing-lg: 24px;
     --spacing-xl: 32px;
 
-    /* Border Radius */
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
+    /* M3 Shape (border-radius) */
+    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-medium: 12px;
+    --md-sys-shape-corner-large: 16px;
+    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-full: 9999px;
 
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --radius-sm: var(--md-sys-shape-corner-small);
+    --radius-md: var(--md-sys-shape-corner-medium);
+    --radius-lg: var(--md-sys-shape-corner-large);
+    --radius-xl: var(--md-sys-shape-corner-extra-large);
+
+    /* M3 Elevation (shadows) */
+    --md-sys-elevation-1: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+    --md-sys-elevation-2: 0 2px 6px 2px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
+    --md-sys-elevation-3: 0 4px 8px 3px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.3);
+
+    --shadow-sm: var(--md-sys-elevation-1);
+    --shadow-md: var(--md-sys-elevation-2);
+    --shadow-lg: var(--md-sys-elevation-3);
     --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
@@ -57,8 +84,8 @@
 body {
     font-family: var(--font-family-base);
     line-height: 1.6;
-    color: var(--gray-800);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--md-sys-color-on-surface);
+    background: var(--md-sys-color-surface);
     min-height: 100vh;
 }
 
