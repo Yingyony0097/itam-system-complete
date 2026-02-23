@@ -296,9 +296,15 @@ include __DIR__ . '/../layouts/sidebar.php';
 
                         <?php
                         $categories = $data['categories'] ?? [];
+                        $catLabels = [];
+                        $catCounts = [];
+                        foreach ($categories as $cat) {
+                            $catLabels[] = $cat['category'] ?? 'Unknown';
+                            $catCounts[] = (int)($cat['asset_count'] ?? $cat['count'] ?? 0);
+                        }
                         ?>
 
-                        <?php if (empty($categories)): ?>
+                        <?php if (empty($catLabels)): ?>
                             <p class="text-center py-4 m-0" style="color: var(--md-sys-color-on-surface-variant);">
                                 <?php echo e(tr('No category data')); ?>
                             </p>
@@ -405,11 +411,11 @@ var availTrendData = <?php echo json_encode(array_column($data['available_trend'
 drawSparkline('sparkTotal', totalTrendData, '#4355B9');
 drawSparkline('sparkAvailable', availTrendData, '#386A20');
 
-<?php if (!empty($categories)): ?>
+<?php if (!empty($catLabels)): ?>
 // Doughnut Chart for Assets by Category
 (function() {
-    var labels = <?php echo json_encode(array_column($categories, 'category'), JSON_UNESCAPED_UNICODE); ?>;
-    var counts = <?php echo json_encode(array_map('intval', array_column($categories, 'asset_count'))); ?>;
+    var labels = <?php echo json_encode($catLabels, JSON_UNESCAPED_UNICODE); ?>;
+    var counts = <?php echo json_encode($catCounts); ?>;
     var m3Colors = ['#4355B9','#386A20','#7D5700','#7B5EA7','#984061','#00687A','#5D5F5F','#6B5778','#006D3B'];
 
     var ctx = document.getElementById('categoryDoughnut');
