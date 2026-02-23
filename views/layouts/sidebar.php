@@ -88,7 +88,7 @@ $isAdmin = isAdmin();
 
     <div class="sidebar-footer">
         <div class="mb-3">
-            <a href="/views/auth/logout.php" class="btn btn-outline-danger w-100">
+            <a href="/views/auth/logout.php" class="btn btn-m3-tonal-error w-100">
                 <i class="bi bi-box-arrow-right me-2"></i><?php echo e(t('nav.logout')); ?>
             </a>
         </div>
