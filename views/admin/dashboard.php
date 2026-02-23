@@ -130,6 +130,19 @@ include __DIR__ . '/../layouts/sidebar.php';
         </div>
     </header>
 
+    <!-- M3 Search Bar -->
+    <div style="margin: 0 16px 16px 16px;">
+        <div class="m3-search-container">
+            <i class="bi bi-search m3-search-icon"></i>
+            <input type="text"
+                   class="m3-search-input"
+                   id="globalSearch"
+                   placeholder="<?php echo e(tr('Search assets, users...')); ?>"
+                   autocomplete="off">
+            <div class="m3-search-results" id="globalSearchResults"></div>
+        </div>
+    </div>
+
     <main class="page-content" style="padding: 0 16px 16px 16px; min-height: calc(100vh - 120px);">
         <div class="dashboard-content">
             <div class="row g-4 mb-4">

@@ -413,4 +413,52 @@ document.addEventListener('DOMContentLoaded', function() {
             bsAlert.close();
         }, 5000);
     });
+
+    // M3 Global Search
+    initGlobalSearch();
 });
+
+// M3 Global Search
+function initGlobalSearch() {
+    const searchInput = document.getElementById('globalSearch');
+    const searchResults = document.getElementById('globalSearchResults');
+    if (!searchInput || !searchResults) return;
+
+    const handleSearch = debounce(async function() {
+        const query = searchInput.value.trim();
+        if (query.length < 2) {
+            searchResults.classList.remove('show');
+            return;
+        }
+
+        const data = await fetchData('/controllers/api_search.php?q=' + encodeURIComponent(query));
+        if (!data || !data.results || data.results.length === 0) {
+            searchResults.innerHTML = '<div class="p-3 text-center" style="color:var(--md-sys-color-on-surface-variant);">' +
+                translateText('No matches found') + '</div>';
+            searchResults.classList.add('show');
+            return;
+        }
+
+        searchResults.innerHTML = data.results.map(function(item) {
+            var statusColor = item.status === 'Available'
+                ? 'color:#386A20' : 'color:#7D5700';
+            return '<a href="' + item.url + '" class="m3-search-result-item">' +
+                '<i class="bi bi-box-seam" style="font-size:20px;color:var(--md-sys-color-primary)"></i>' +
+                '<div class="flex-grow-1"><div class="fw-medium">' + translateText(item.name) + '</div>' +
+                '<small style="color:var(--md-sys-color-on-surface-variant)">' +
+                item.code + ' &bull; ' + translateText(item.category) + '</small></div>' +
+                '<span style="font-size:12px;font-weight:500;' + statusColor + '">' +
+                translateText(item.status) + '</span>' +
+                '</a>';
+        }).join('');
+        searchResults.classList.add('show');
+    }, 300);
+
+    searchInput.addEventListener('input', handleSearch);
+
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.remove('show');
+        }
+    });
+}
