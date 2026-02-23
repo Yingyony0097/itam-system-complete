@@ -409,7 +409,7 @@ drawSparkline('sparkAvailable', availTrendData, '#386A20');
 // Doughnut Chart for Assets by Category
 (function() {
     var labels = <?php echo json_encode(array_column($categories, 'category'), JSON_UNESCAPED_UNICODE); ?>;
-    var counts = <?php echo json_encode(array_map('intval', array_column($categories, 'count'))); ?>;
+    var counts = <?php echo json_encode(array_map('intval', array_column($categories, 'asset_count'))); ?>;
     var m3Colors = ['#4355B9','#386A20','#7D5700','#7B5EA7','#984061','#00687A','#5D5F5F','#6B5778','#006D3B'];
 
     var ctx = document.getElementById('categoryDoughnut');

@@ -148,7 +148,7 @@ class Asset extends Model {
 
     // Get assets by category
     public function getByCategory() {
-        $sql = "SELECT category, COUNT(*) as count FROM {$this->table} GROUP BY category";
+        $sql = "SELECT category, COUNT(*) as asset_count FROM {$this->table} WHERE category IS NOT NULL AND category != '' GROUP BY category ORDER BY asset_count DESC";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
