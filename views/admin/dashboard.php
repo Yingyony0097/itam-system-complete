@@ -132,20 +132,20 @@ include __DIR__ . '/../layouts/sidebar.php';
 
     <main class="page-content" style="padding: 0 16px 16px 16px; min-height: calc(100vh - 120px);">
         <div class="dashboard-content">
-            <div class="row g-3 mb-4">
+            <div class="row g-4 mb-4">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="stat-card glass-card">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <p class="stat-label m-0">Total Assets</p>
+                                <p class="stat-label m-0"><?php echo e(tr('Total Assets')); ?></p>
                                 <h2 class="stat-value m-0"><?php echo $totalAssets; ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--color-success);">
+                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                     <i class="bi bi-trending-up" style="font-size: 14px;"></i>
-                                    All assets
+                                    <?php echo e(tr('All assets')); ?>
                                 </p>
                             </div>
-                            <div class="stat-icon" style="margin-bottom: 0; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                                <i class="bi bi-box-seam" style="font-size: 32px;"></i>
+                            <div class="stat-icon primary" style="margin-bottom: 0;">
+                                <i class="bi bi-box-seam" style="font-size: 28px;"></i>
                             </div>
                         </div>
                     </div>
@@ -155,15 +155,15 @@ include __DIR__ . '/../layouts/sidebar.php';
                     <div class="stat-card glass-card">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <p class="stat-label m-0">Available</p>
+                                <p class="stat-label m-0"><?php echo e(tr('Available')); ?></p>
                                 <h2 class="stat-value m-0"><?php echo $availableAssets; ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--color-success);">
+                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                     <i class="bi bi-check-circle" style="font-size: 14px;"></i>
-                                    <?php echo $availablePct; ?>% available
+                                    <?php echo $availablePct; ?>% <?php echo e(tr('Available')); ?>
                                 </p>
                             </div>
-                            <div class="stat-icon" style="margin-bottom: 0; background: linear-gradient(135deg, var(--color-success), #059669);">
-                                <i class="bi bi-check-circle" style="font-size: 32px;"></i>
+                            <div class="stat-icon success" style="margin-bottom: 0;">
+                                <i class="bi bi-check-circle" style="font-size: 28px;"></i>
                             </div>
                         </div>
                     </div>
@@ -173,15 +173,15 @@ include __DIR__ . '/../layouts/sidebar.php';
                     <div class="stat-card glass-card">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <p class="stat-label m-0">In Use</p>
+                                <p class="stat-label m-0"><?php echo e(tr('In Use')); ?></p>
                                 <h2 class="stat-value m-0"><?php echo $inUseAssets; ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--color-warning);">
+                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                     <i class="bi bi-arrow-up-circle" style="font-size: 14px;"></i>
-                                    <?php echo $inUsePct; ?>% in use
+                                    <?php echo $inUsePct; ?>% <?php echo e(tr('In Use')); ?>
                                 </p>
                             </div>
-                            <div class="stat-icon" style="margin-bottom: 0; background: linear-gradient(135deg, var(--color-warning), #d97706);">
-                                <i class="bi bi-arrow-repeat" style="font-size: 32px;"></i>
+                            <div class="stat-icon warning" style="margin-bottom: 0;">
+                                <i class="bi bi-arrow-repeat" style="font-size: 28px;"></i>
                             </div>
                         </div>
                     </div>
@@ -191,22 +191,22 @@ include __DIR__ . '/../layouts/sidebar.php';
                     <div class="stat-card glass-card">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <p class="stat-label m-0">Total Value</p>
+                                <p class="stat-label m-0"><?php echo e(tr('Total Value')); ?></p>
                                 <h2 class="stat-value m-0">$<?php echo number_format($totalValue, 2); ?></h2>
-                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--color-info);">
+                                <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                     <i class="bi bi-currency-dollar" style="font-size: 14px;"></i>
-                                    Asset worth
+                                    <?php echo e(tr('Asset worth')); ?>
                                 </p>
                             </div>
-                            <div class="stat-icon" style="margin-bottom: 0; background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
-                                <i class="bi bi-currency-dollar" style="font-size: 32px;"></i>
+                            <div class="stat-icon purple" style="margin-bottom: 0;">
+                                <i class="bi bi-currency-dollar" style="font-size: 28px;"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row g-3 mb-4">
+            <div class="row g-4 mb-4">
                 <div class="col-12 col-lg-7">
                     <div class="glass-card p-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
