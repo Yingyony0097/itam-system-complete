@@ -62,12 +62,60 @@ class AssetController {
             return ['success' => false, 'message' => 'Asset not found'];
         }
 
+        // Delete photo file from disk
+        if (!empty($asset['photo_url'])) {
+            $this->deletePhoto($asset['photo_url']);
+        }
+
         // Delete check logs first (cascade)
         $this->checkLogModel->deleteByAsset($id);
 
         // Delete asset
         $success = $this->assetModel->delete($id);
         return $success ? ['success' => true, 'message' => 'Asset deleted successfully'] : ['success' => false, 'message' => 'Failed to delete asset'];
+    }
+
+    // Upload asset photo
+    public function uploadPhoto($file) {
+        if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
+            return ['success' => false, 'message' => 'No file uploaded or upload error'];
+        }
+
+        // Validate file size
+        if ($file['size'] > MAX_FILE_SIZE) {
+            return ['success' => false, 'message' => 'File size exceeds 5MB limit'];
+        }
+
+        // Validate extension
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            return ['success' => false, 'message' => 'Invalid file type. Allowed: ' . implode(', ', ALLOWED_EXTENSIONS)];
+        }
+
+        // Generate unique filename
+        $filename = 'asset_' . uniqid() . '.' . $ext;
+        $uploadDir = __DIR__ . '/../public/uploads/assets/';
+        $destPath = $uploadDir . $filename;
+
+        // Ensure directory exists
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            return ['success' => false, 'message' => 'Failed to save uploaded file'];
+        }
+
+        return ['success' => true, 'photo_url' => '/public/uploads/assets/' . $filename];
+    }
+
+    // Delete photo file from disk
+    public function deletePhoto($photoUrl) {
+        if (empty($photoUrl)) return;
+        $filePath = __DIR__ . '/..' . $photoUrl;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 
     // Check out asset
