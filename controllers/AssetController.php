@@ -161,5 +161,101 @@ class AssetController {
     public function getCategories() {
         return $this->assetModel->getByCategory();
     }
+
+    // Import assets from Excel (.xlsx) file
+    public function importAssets($file) {
+        if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
+            return ['success' => false, 'message' => 'No file uploaded or upload error'];
+        }
+
+        if ($file['size'] > MAX_FILE_SIZE) {
+            return ['success' => false, 'message' => 'File size exceeds 5MB limit'];
+        }
+
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if ($ext !== 'xlsx') {
+            return ['success' => false, 'message' => 'Invalid file type. Only .xlsx files are allowed'];
+        }
+
+        require_once __DIR__ . '/../libs/SimpleXLSX.php';
+        $xlsx = \Shuchkin\SimpleXLSX::parse($file['tmp_name']);
+        if (!$xlsx) {
+            return ['success' => false, 'message' => 'Failed to parse Excel file: ' . \Shuchkin\SimpleXLSX::parseError()];
+        }
+
+        $rows = $xlsx->rows();
+        if (count($rows) < 2) {
+            return ['success' => false, 'message' => 'Excel file has no data rows (only header)'];
+        }
+
+        $created = 0;
+        $errors = [];
+        $validCategories = ['Computer', 'Phone', 'Printer', 'Accessory'];
+        $validStatuses = [STATUS_AVAILABLE, STATUS_IN_USE];
+
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i];
+
+            // Skip empty rows
+            if (empty(trim($row[0] ?? ''))) continue;
+
+            $assetName = trim($row[0] ?? '');
+            $category = trim($row[1] ?? '');
+            $serialNumber = trim($row[2] ?? '');
+            $brand = trim($row[3] ?? '');
+            $model = trim($row[4] ?? '');
+            $purchaseDate = trim($row[5] ?? '');
+            $purchasePrice = trim($row[6] ?? '0');
+            $status = trim($row[7] ?? STATUS_AVAILABLE);
+
+            // Validate required fields
+            if (empty($assetName)) {
+                $errors[] = "Row " . ($i + 1) . ": Asset Name is required";
+                continue;
+            }
+            if (empty($category) || !in_array($category, $validCategories)) {
+                $errors[] = "Row " . ($i + 1) . ": Invalid category '$category'. Must be: " . implode(', ', $validCategories);
+                continue;
+            }
+
+            // Normalize status
+            if (!in_array($status, $validStatuses)) {
+                $status = STATUS_AVAILABLE;
+            }
+
+            $data = [
+                'asset_name' => $assetName,
+                'category' => $category,
+                'serial_number' => $serialNumber ?: null,
+                'brand' => $brand ?: null,
+                'model' => $model ?: null,
+                'purchase_date' => $purchaseDate ?: null,
+                'purchase_price' => (float)$purchasePrice,
+                'status' => $status
+            ];
+
+            try {
+                $result = $this->createAsset($data);
+                if ($result['success']) {
+                    $created++;
+                } else {
+                    $errors[] = "Row " . ($i + 1) . ": " . ($result['message'] ?? 'Failed to create');
+                }
+            } catch (\Exception $e) {
+                $msg = $e->getMessage();
+                if (strpos($msg, 'Duplicate entry') !== false && strpos($msg, 'serial_number') !== false) {
+                    $errors[] = "Row " . ($i + 1) . ": Duplicate serial number '$serialNumber'";
+                } else {
+                    $errors[] = "Row " . ($i + 1) . ": " . $msg;
+                }
+            }
+        }
+
+        return [
+            'success' => true,
+            'created' => $created,
+            'errors' => $errors
+        ];
+    }
 }
 ?>
