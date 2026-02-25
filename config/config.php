@@ -485,7 +485,7 @@ function uiTextMap() {
         'Mar' => 'ມ.ນ',
         'Apr' => 'ມ.ສ',
         'May' => 'ພ.ພ',
-        'Jun' => 'ມິ.ຖ',
+        'Jun' => 'ມ.ຖ',
         'Jul' => 'ກ.ລ',
         'Aug' => 'ສ.ຫ',
         'Sep' => 'ກ.ຍ',
@@ -556,5 +556,15 @@ function requireAdmin() {
         $_SESSION['error'] = t('auth.access_denied_admin');
         redirect("/views/user/dashboard.php");
     }
+}
+
+function userAvatar($size = 'default') {
+    $photo = $_SESSION['user_photo'] ?? null;
+    $initials = strtoupper(substr($_SESSION['user_name'] ?? '', 0, 2));
+    if ($photo) {
+        $sizeStyle = $size === 'small' ? 'width:32px;height:32px;' : '';
+        return '<img src="' . e($photo) . '" alt="" class="user-avatar-img" style="' . $sizeStyle . '">';
+    }
+    return '<div class="user-avatar">' . $initials . '</div>';
 }
 ?>

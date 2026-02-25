@@ -81,9 +81,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             <div class="header-right d-flex align-items-center gap-3">
                 <div class="dropdown">
                     <button class="d-flex align-items-center gap-3 border-0 bg-transparent" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                        <div class="user-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px;">
-                            <?php echo e(itam_initials($_SESSION['user_name'] ?? '')); ?>
-                        </div>
+                        <?php echo userAvatar(); ?>
 
                         <div class="d-none d-md-block text-start">
                             <p class="m-0" style="font-size: 14px; font-weight: 600; color: var(--gray-800);">

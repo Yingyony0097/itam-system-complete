@@ -453,6 +453,14 @@ html[lang="lo"] button {
     font-size: 14px;
 }
 
+.user-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--md-sys-color-primary-container);
+}
+
 /* M3 Surface Cards */
 .glass-card {
     background: var(--md-sys-color-surface-container-low);

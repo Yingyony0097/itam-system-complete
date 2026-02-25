@@ -21,7 +21,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             <i class="bi bi-list"></i>
         </button>
         <div class="d-flex align-items-center gap-3 ms-auto">
-            <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 2)); ?></div>
+            <?php echo userAvatar(); ?>
         </div>
     </header>
 

@@ -23,6 +23,7 @@ class AuthController {
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_photo'] = $user['photo_url'] ?? null;
 
             // Update last login (optional)
             // $this->userModel->update($user['user_id'], ['last_login' => date('Y-m-d H:i:s')]);

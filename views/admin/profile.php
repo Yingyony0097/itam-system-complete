@@ -61,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     if ($result['success']) {
         $_SESSION['user_name'] = $data['name'];
         $_SESSION['user_email'] = $data['email'];
+        if (array_key_exists('photo_url', $data)) {
+            $_SESSION['user_photo'] = $data['photo_url'];
+        }
         $_SESSION['success'] = 'Profile updated successfully';
     } else {
         $_SESSION['error'] = $result['message'];
@@ -99,7 +102,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             <i class="bi bi-list"></i>
         </button>
         <div class="d-flex align-items-center gap-3 ms-auto">
-            <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 2)); ?></div>
+            <?php echo userAvatar(); ?>
         </div>
     </header>
 

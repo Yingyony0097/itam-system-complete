@@ -55,9 +55,7 @@ function user_initials($name) {
                     <div style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);"><?php echo e(tr('Current Date')); ?></div>
                     <div class="fw-semibold" style="font-size: 14px; color: var(--md-sys-color-on-surface);"><?php echo date('F j, Y'); ?></div>
                 </div>
-                <div class="user-avatar" style="width: 40px; height: 40px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">
-                    <?php echo e(user_initials($_SESSION['user_name'] ?? '')); ?>
-                </div>
+                <?php echo userAvatar(); ?>
             </div>
         </div>
     </header>
