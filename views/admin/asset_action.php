@@ -31,10 +31,37 @@ $data = [
     'status' => $_POST['status'] ?? 'Available'
 ];
 
+// Handle photo upload
+$hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
+$removePhoto = !empty($_POST['remove_photo']);
+
+if ($hasNewPhoto) {
+    $uploadResult = $assetController->uploadPhoto($_FILES['photo']);
+    if ($uploadResult['success']) {
+        $data['photo_url'] = $uploadResult['photo_url'];
+    } else {
+        $_SESSION['error'] = $uploadResult['message'];
+        redirect('/views/admin/assets.php');
+    }
+}
+
 if ($action === 'create') {
     $result = $assetController->createAsset($data);
 } else {
-    $assetId = $_POST['asset_id'] ?? 0;
+    $assetId = (int)($_POST['asset_id'] ?? 0);
+
+    // Delete old photo if replacing or removing
+    if ($hasNewPhoto || $removePhoto) {
+        $existing = $assetController->getAsset($assetId);
+        if ($existing && !empty($existing['photo_url'])) {
+            $assetController->deletePhoto($existing['photo_url']);
+        }
+    }
+
+    if ($removePhoto && !$hasNewPhoto) {
+        $data['photo_url'] = null;
+    }
+
     $result = $assetController->updateAsset($assetId, $data);
 }
 
