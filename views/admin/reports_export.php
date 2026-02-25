@@ -73,7 +73,8 @@ function printHtml($title, $headers, $rows, $metaLines = []) {
             th { background: #f3f4f6; text-align: left; }
             caption { text-align: left; margin-bottom: 8px; font-weight: bold; }
             @media print {
-                @page { margin: 15mm; }
+                @page { size: auto; margin: 0; }
+                body { margin: 15mm; }
             }
         </style>
     </head>
