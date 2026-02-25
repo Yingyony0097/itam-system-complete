@@ -120,7 +120,7 @@ switch ($type) {
                 tr((string)$a['status']),
                 $a['assigned_user_name'] ?: '-',
                 $a['purchase_date'],
-                number_format($a['purchase_price'], 2)
+                '₭' . number_format($a['purchase_price'])
             ];
         }
         $title = tr('All Assets Report');
@@ -156,13 +156,13 @@ switch ($type) {
             $byCategory[$a['category']]['count']++;
                 $byCategory[$a['category']]['value'] += (float)$a['purchase_price'];
         }
-        $headers = [tr('Category'), tr('Asset Count'), tr('Total Value ($)')];
+        $headers = [tr('Category'), tr('Asset Count'), tr('Total Value (₭)')];
         $rows = [];
         foreach ($byCategory as $cat => $data) {
             $rows[] = [
                 tr((string)$cat),
                 $data['count'],
-                number_format($data['value'], 2)
+                '₭' . number_format($data['value'])
             ];
         }
         $title = tr('Asset Value Report');
