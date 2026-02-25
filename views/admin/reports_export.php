@@ -73,8 +73,27 @@ function printHtml($title, $headers, $rows, $metaLines = []) {
             th { background: #f3f4f6; text-align: left; }
             caption { text-align: left; margin-bottom: 8px; font-weight: bold; }
             @media print {
-                @page { size: auto; margin: 0; }
-                body { margin: 15mm; }
+                @page {
+                    size: auto;
+                    margin: 0;
+                    @bottom-center { content: counter(page); }
+                }
+                body { margin: 15mm 15mm 20mm 15mm; }
+            }
+            .print-footer {
+                display: none;
+            }
+            @media print {
+                .print-footer {
+                    display: block;
+                    position: fixed;
+                    bottom: 5mm;
+                    left: 0;
+                    right: 0;
+                    text-align: center;
+                    font-size: 11px;
+                    color: #888;
+                }
             }
         </style>
     </head>
