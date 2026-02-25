@@ -72,6 +72,9 @@ function printHtml($title, $headers, $rows, $metaLines = []) {
             th, td { border: 1px solid #ccc; padding: 8px; font-size: 13px; }
             th { background: #f3f4f6; text-align: left; }
             caption { text-align: left; margin-bottom: 8px; font-weight: bold; }
+            @media print {
+                @page { margin: 15mm; }
+            }
         </style>
     </head>
     <body onload="window.print()">
