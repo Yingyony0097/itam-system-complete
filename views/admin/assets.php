@@ -116,8 +116,19 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <tr>
                                 <td><code><?php echo e($asset['asset_code']); ?></code></td>
                                 <td>
-                                    <div class="fw-semibold"><?php echo e($asset['asset_name']); ?></div>
-                                    <small class="text-muted"><?php echo e($asset['brand'] . ' ' . $asset['model']); ?></small>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <?php if (!empty($asset['photo_url'])): ?>
+                                            <img src="<?php echo e($asset['photo_url']); ?>" alt="" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+                                        <?php else: ?>
+                                            <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                <i class="bi bi-box-seam"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div>
+                                            <div class="fw-semibold"><?php echo e($asset['asset_name']); ?></div>
+                                            <small class="text-muted"><?php echo e($asset['brand'] . ' ' . $asset['model']); ?></small>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td><span class="badge-custom badge-category"><?php echo e($asset['category']); ?></span></td>
                                 <td><small class="font-monospace"><?php echo e($asset['serial_number']); ?></small></td>
@@ -162,7 +173,7 @@ include __DIR__ . '/../layouts/sidebar.php';
 <div class="modal fade modal-glass" id="assetModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="POST" action="/views/admin/asset_action.php" id="assetForm">
+            <form method="POST" action="/views/admin/asset_action.php" id="assetForm" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <input type="hidden" name="asset_id" id="assetId">
                 <input type="hidden" name="action" id="formAction" value="create">
@@ -218,6 +229,22 @@ include __DIR__ . '/../layouts/sidebar.php';
                                 <option value="In Use">In Use</option>
                             </select>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">Asset Photo</label>
+                            <input type="file" name="photo" class="form-control form-control-glass" id="assetPhoto" accept="image/jpeg,image/png,image/gif">
+                            <small class="text-muted">Max 5MB. Allowed: JPG, PNG, GIF</small>
+                            <div id="photoPreview" class="mt-2" style="display: none;">
+                                <div class="d-flex align-items-start gap-3">
+                                    <img id="photoPreviewImg" src="" alt="Preview" style="width: 120px; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid var(--md-sys-color-outline-variant);">
+                                    <div>
+                                        <label class="m3-checkbox" id="removePhotoLabel" style="display: none;">
+                                            <input type="checkbox" name="remove_photo" id="removePhoto" value="1">
+                                            <span>Remove photo</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -242,6 +269,10 @@ function resetAssetForm() {
     document.getElementById('formAction').value = 'create';
     document.getElementById('modalTitle').textContent = 'Add New Asset';
     document.getElementById('assetCode').value = '';
+    document.getElementById('photoPreview').style.display = 'none';
+    document.getElementById('photoPreviewImg').src = '';
+    document.getElementById('removePhotoLabel').style.display = 'none';
+    document.getElementById('removePhoto').checked = false;
 }
 
 function editAsset(asset) {
@@ -258,8 +289,38 @@ function editAsset(asset) {
     document.getElementById('assetPrice').value = asset.purchase_price;
     document.getElementById('assetStatus').value = asset.status;
 
+    // Show existing photo if any
+    var preview = document.getElementById('photoPreview');
+    var previewImg = document.getElementById('photoPreviewImg');
+    var removeLabel = document.getElementById('removePhotoLabel');
+    document.getElementById('removePhoto').checked = false;
+
+    if (asset.photo_url) {
+        previewImg.src = asset.photo_url;
+        preview.style.display = 'block';
+        removeLabel.style.display = 'flex';
+    } else {
+        preview.style.display = 'none';
+        previewImg.src = '';
+        removeLabel.style.display = 'none';
+    }
+
     new bootstrap.Modal(document.getElementById('assetModal')).show();
 }
+
+// Live preview when selecting a new photo file
+document.getElementById('assetPhoto').addEventListener('change', function(e) {
+    var preview = document.getElementById('photoPreview');
+    var previewImg = document.getElementById('photoPreviewImg');
+    if (e.target.files && e.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            previewImg.src = ev.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
 
 function viewAsset(id) {
     // Fetch asset details via AJAX or redirect to detail page
