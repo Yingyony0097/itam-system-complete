@@ -7,6 +7,13 @@ require_once __DIR__ . '/../../config/config.php';
 $styleFile = __DIR__ . '/../../public/assets/css/style.css';
 $styleVersion = file_exists($styleFile) ? (string)filemtime($styleFile) : APP_VERSION;
 $faviconFile = __DIR__ . '/../../public/favicon.ico';
+$faviconHref = '/public/favicon.ico';
+
+if (is_dir($faviconFile) && file_exists($faviconFile . '/favicon.ico')) {
+    $faviconFile = $faviconFile . '/favicon.ico';
+    $faviconHref = '/public/favicon.ico/favicon.ico';
+}
+
 $faviconVersion = file_exists($faviconFile) ? (string)filemtime($faviconFile) : APP_VERSION;
 ?>
 <!DOCTYPE html>
@@ -16,7 +23,7 @@ $faviconVersion = file_exists($faviconFile) ? (string)filemtime($faviconFile) : 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? e(tr($pageTitle)) . ' - ' : ''; ?><?php echo e(tr('ITAM System')); ?></title>
     <meta name="description" content="IT Asset Management System for P-line Company">
-    <link rel="icon" type="image/x-icon" href="/public/favicon.ico?v=<?php echo e($faviconVersion); ?>">
+    <link rel="icon" type="image/x-icon" href="<?php echo e($faviconHref); ?>?v=<?php echo e($faviconVersion); ?>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
