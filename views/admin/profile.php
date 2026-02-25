@@ -16,8 +16,46 @@ $assetModel = new Asset();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $data = [
         'name' => $_POST['name'] ?? '',
-        'email' => $_POST['email'] ?? ''
+        'email' => $_POST['email'] ?? '',
+        'phone' => $_POST['phone'] ?? null,
+        'department' => $_POST['department'] ?? null
     ];
+
+    // Handle photo upload
+    $hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
+    $removePhoto = !empty($_POST['remove_photo']);
+
+    if ($hasNewPhoto) {
+        $file = $_FILES['photo'];
+        if ($file['size'] > MAX_FILE_SIZE) {
+            $_SESSION['error'] = 'File size exceeds 5MB limit';
+            redirect($_SERVER['PHP_SELF']);
+        }
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext, ALLOWED_EXTENSIONS)) {
+            $_SESSION['error'] = 'Invalid file type. Allowed: ' . implode(', ', ALLOWED_EXTENSIONS);
+            redirect($_SERVER['PHP_SELF']);
+        }
+        $filename = 'user_' . uniqid() . '.' . $ext;
+        $uploadDir = __DIR__ . '/../../public/uploads/users/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+            // Delete old photo
+            $existing = $userController->getUser($_SESSION['user_id']);
+            if (!empty($existing['photo_url'])) {
+                $oldPath = __DIR__ . '/../..' . $existing['photo_url'];
+                if (file_exists($oldPath)) unlink($oldPath);
+            }
+            $data['photo_url'] = '/public/uploads/users/' . $filename;
+        }
+    } elseif ($removePhoto) {
+        $existing = $userController->getUser($_SESSION['user_id']);
+        if (!empty($existing['photo_url'])) {
+            $oldPath = __DIR__ . '/../..' . $existing['photo_url'];
+            if (file_exists($oldPath)) unlink($oldPath);
+        }
+        $data['photo_url'] = null;
+    }
 
     $result = $userController->updateUser($_SESSION['user_id'], $data);
     if ($result['success']) {
@@ -69,11 +107,25 @@ include __DIR__ . '/../layouts/sidebar.php';
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="profile-card">
-                    <div class="profile-avatar-large"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 2)); ?></div>
+                    <?php if (!empty($currentUser['photo_url'])): ?>
+                        <img src="<?php echo e($currentUser['photo_url']); ?>" alt="<?php echo e($currentUser['name']); ?>" class="profile-avatar-photo">
+                    <?php else: ?>
+                        <div class="profile-avatar-large"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 2)); ?></div>
+                    <?php endif; ?>
                     <h4><?php echo e($_SESSION['user_name']); ?></h4>
-                    <p class="text-muted mb-4"><?php echo e($_SESSION['user_email']); ?></p>
+                    <p class="text-muted mb-1"><?php echo e($_SESSION['user_email']); ?></p>
+                    <?php if (!empty($currentUser['department'])): ?>
+                        <p class="mb-0" style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);">
+                            <i class="bi bi-building me-1"></i><?php echo e($currentUser['department']); ?>
+                        </p>
+                    <?php endif; ?>
+                    <?php if (!empty($currentUser['phone'])): ?>
+                        <p class="mb-0" style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);">
+                            <i class="bi bi-telephone me-1"></i><?php echo e($currentUser['phone']); ?>
+                        </p>
+                    <?php endif; ?>
 
-                    <div class="d-flex justify-content-center gap-3 mb-4">
+                    <div class="d-flex justify-content-center gap-3 my-4">
                         <div class="text-center">
                             <div class="fw-bold text-primary"><?php echo count($myAssets); ?></div>
                             <small class="text-muted">Assets</small>
@@ -98,7 +150,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             <div class="col-lg-8">
                 <div class="glass-card p-4 mb-4">
                     <h5 class="mb-4">Account Information</h5>
-                    <form method="POST" action="">
+                    <form method="POST" action="" enctype="multipart/form-data">
                         <input type="hidden" name="update_profile" value="1">
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -110,12 +162,34 @@ include __DIR__ . '/../layouts/sidebar.php';
                                 <input type="email" name="email" class="form-control form-control-glass" value="<?php echo e($currentUser['email']); ?>" required>
                             </div>
                             <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="phone" class="form-control form-control-glass" value="<?php echo e($currentUser['phone'] ?? ''); ?>" placeholder="e.g., +856 20 1234 5678">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Department</label>
+                                <input type="text" name="department" class="form-control form-control-glass" value="<?php echo e($currentUser['department'] ?? ''); ?>" placeholder="e.g., IT, HR, Finance">
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label">Role</label>
                                 <input type="text" class="form-control form-control-glass" value="<?php echo e($currentUser['role']); ?>" readonly disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Member Since</label>
                                 <input type="text" class="form-control form-control-glass" value="<?php echo date('F j, Y', strtotime($currentUser['created_at'])); ?>" readonly disabled>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Profile Photo</label>
+                                <input type="file" name="photo" class="form-control form-control-glass" accept="image/jpeg,image/png,image/gif" id="profilePhoto">
+                                <small class="text-muted">Max 5MB. Allowed: JPG, PNG, GIF</small>
+                                <?php if (!empty($currentUser['photo_url'])): ?>
+                                    <div class="mt-2 d-flex align-items-center gap-3">
+                                        <img src="<?php echo e($currentUser['photo_url']); ?>" alt="Current photo" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 1px solid var(--md-sys-color-outline-variant);">
+                                        <label class="m3-checkbox">
+                                            <input type="checkbox" name="remove_photo" value="1">
+                                            <span>Remove photo</span>
+                                        </label>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="mt-4">
