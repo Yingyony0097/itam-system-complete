@@ -112,13 +112,27 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 14px;">
-                                            <?php echo strtoupper(substr($user['name'], 0, 2)); ?>
+                                        <?php if (!empty($user['photo_url'])): ?>
+                                            <img src="<?php echo e($user['photo_url']); ?>" alt="" class="user-avatar-img" style="width:32px;height:32px;">
+                                        <?php else: ?>
+                                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 14px;">
+                                                <?php echo strtoupper(substr($user['name'], 0, 2)); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div>
+                                            <div class="fw-semibold"><?php echo e($user['name']); ?></div>
+                                            <?php if (!empty($user['department'])): ?>
+                                                <small class="text-muted"><?php echo e($user['department']); ?></small>
+                                            <?php endif; ?>
                                         </div>
-                                        <div class="fw-semibold"><?php echo e($user['name']); ?></div>
                                     </div>
                                 </td>
-                                <td><?php echo e($user['email']); ?></td>
+                                <td>
+                                    <div><?php echo e($user['email']); ?></div>
+                                    <?php if (!empty($user['phone'])): ?>
+                                        <small class="text-muted"><?php echo e($user['phone']); ?></small>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <span class="badge-custom badge-<?php echo $user['role'] === 'Admin' ? 'admin' : 'category'; ?>">
                                         <?php echo e($user['role']); ?>
