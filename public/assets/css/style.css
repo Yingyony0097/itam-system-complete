@@ -957,6 +957,17 @@ html[lang="lo"] button {
     box-shadow: var(--md-sys-elevation-2);
 }
 
+.profile-avatar-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 24px;
+    display: block;
+    border: 3px solid var(--md-sys-color-primary-container);
+    box-shadow: var(--md-sys-elevation-2);
+}
+
 /* Report Cards */
 .report-card {
     background: var(--md-sys-color-surface-container-lowest);
