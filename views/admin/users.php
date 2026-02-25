@@ -141,9 +141,6 @@ include __DIR__ . '/../layouts/sidebar.php';
                                 <td><span class="badge-custom badge-available">Active</span></td>
                                 <td><?php echo $assetCount; ?> assets</td>
                                 <td class="text-end">
-                                    <button class="btn-icon me-1" onclick="viewUserAssets(<?php echo $user['user_id']; ?>)" title="View Assets">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
                                     <button class="btn-icon me-1" onclick="editUser(<?php echo htmlspecialchars(json_encode($user)); ?>)" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
@@ -234,9 +231,6 @@ function editUser(user) {
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
-function viewUserAssets(userId) {
-    window.location.href = '/views/admin/user_assets.php?id=' + userId;
-}
 </script>
 
 <?php if (($_GET['action'] ?? '') === 'add'): ?>
