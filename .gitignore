@@ -1,3 +1,6 @@
+# Codex generated files
+codex_*
+
 # Uploaded files
 public/uploads/assets/*
 public/uploads/users/*
