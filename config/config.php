@@ -323,7 +323,7 @@ function uiTextMap() {
         'Model' => 'ຮຸ່ນ',
         'Purchase Date' => 'ວັນທີຊື້',
         'Purchase Price' => 'ລາຄາຊື້',
-        'Purchase Price ($)' => 'ລາຄາຊື້ ($)',
+        'Purchase Price (₭)' => 'ລາຄາຊື້ (₭)',
         'Asset Photo' => 'ຮູບຊັບສິນ',
 
         // Users page

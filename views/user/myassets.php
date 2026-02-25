@@ -70,7 +70,7 @@ include __DIR__ . '/../layouts/sidebar.php';
 
                             <div class="mb-0">
                                 <small class="text-muted d-block">Purchase Price</small>
-                                <div class="fw-semibold">$<?php echo number_format($asset['purchase_price'], 2); ?></div>
+                                <div class="fw-semibold">₭<?php echo number_format($asset['purchase_price']); ?></div>
                             </div>
                         </div>
                     </div>

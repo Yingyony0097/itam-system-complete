@@ -67,7 +67,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             <div class="col-md-6 col-lg-4">
                 <div class="report-card">
                     <div class="report-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
-                        <i class="bi bi-currency-dollar"></i>
+                        <i class="bi bi-cash-stack"></i>
                     </div>
                     <h5><?php echo e(tr('Asset Value Report')); ?></h5>
                     <p class="text-muted mb-4"><?php echo e(tr('Financial overview with category valuation and depreciation tracking.')); ?></p>

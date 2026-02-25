@@ -145,7 +145,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                                 </tr>
                                 <tr>
                                     <td class="text-muted">Purchase Price</td>
-                                    <td class="fw-semibold">$<?php echo number_format((float)($asset['purchase_price'] ?? 0), 2); ?></td>
+                                    <td class="fw-semibold">₭<?php echo number_format((float)($asset['purchase_price'] ?? 0)); ?></td>
                                 </tr>
                                 <tr>
                                     <td class="text-muted">Created</td>

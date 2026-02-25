@@ -203,14 +203,14 @@ include __DIR__ . '/../layouts/sidebar.php';
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="stat-label m-0"><?php echo e(tr('Total Value')); ?></p>
-                                <h2 class="stat-value m-0">$<?php echo number_format($totalValue, 2); ?></h2>
+                                <h2 class="stat-value m-0">₭<?php echo number_format($totalValue); ?></h2>
                                 <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
-                                    <i class="bi bi-currency-dollar" style="font-size: 14px;"></i>
+                                    <i class="bi bi-cash-stack" style="font-size: 14px;"></i>
                                     <?php echo e(tr('Asset worth')); ?>
                                 </p>
                             </div>
                             <div class="stat-icon purple" style="margin-bottom: 0;">
-                                <i class="bi bi-currency-dollar" style="font-size: 28px;"></i>
+                                <i class="bi bi-cash-stack" style="font-size: 28px;"></i>
                             </div>
                         </div>
                     </div>

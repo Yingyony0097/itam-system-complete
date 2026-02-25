@@ -219,8 +219,8 @@ include __DIR__ . '/../layouts/sidebar.php';
                             <input type="date" name="purchase_date" class="form-control form-control-glass" id="assetPurchaseDate">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Purchase Price ($)</label>
-                            <input type="number" name="purchase_price" class="form-control form-control-glass" id="assetPrice" min="0" step="0.01">
+                            <label class="form-label">Purchase Price (₭)</label>
+                            <input type="number" name="purchase_price" class="form-control form-control-glass" id="assetPrice" min="0" step="1">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Status</label>
