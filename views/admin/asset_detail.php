@@ -80,6 +80,13 @@ include __DIR__ . '/../layouts/sidebar.php';
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="glass-card p-4 h-100">
+                    <?php if (!empty($asset['photo_url'])): ?>
+                        <div style="margin: -16px -16px 16px -16px;">
+                            <img src="<?php echo e($asset['photo_url']); ?>" alt="<?php echo e($asset['asset_name'] ?? ''); ?>"
+                                 style="width: 100%; max-height: 220px; object-fit: cover; border-radius: var(--md-sys-shape-corner-large) var(--md-sys-shape-corner-large) 0 0;">
+                        </div>
+                    <?php endif; ?>
+
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <div class="stat-icon primary" style="margin-bottom: 0; width: 56px; height: 56px;">
                             <i class="bi <?php echo itam_asset_icon($asset['category'] ?? ''); ?>"></i>
@@ -89,7 +96,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                         </span>
                     </div>
 
-                    <h4 class="mb-1"><?php echo e($asset['asset_name'] ?? ''); ?></h4>
+                    <h4 class="mb-1"><?php echo e($asset['asset_name'] ?? ''); ?>
                     <div class="text-muted mb-3"><?php echo e($asset['brand'] ?? ''); ?> <?php echo e($asset['model'] ?? ''); ?></div>
 
                     <div class="mb-3">
@@ -152,14 +159,6 @@ include __DIR__ . '/../layouts/sidebar.php';
                         </table>
                     </div>
 
-                    <?php if (!empty($asset['photo_url'])): ?>
-                        <div class="mt-4">
-                            <h6 class="mb-2">Asset Photo</h6>
-                            <div class="glass-card p-2" style="background: rgba(255, 255, 255, 0.7);">
-                                <img src="<?php echo e($asset['photo_url']); ?>" alt="Asset photo" style="width: 100%; border-radius: 12px;">
-                            </div>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
