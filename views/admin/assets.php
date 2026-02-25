@@ -50,9 +50,14 @@ include __DIR__ . '/../layouts/sidebar.php';
                 <h1 class="page-title">Asset Management</h1>
                 <p class="text-muted mb-0">Manage and track all IT assets</p>
             </div>
-            <button class="btn btn-primary-gradient" data-bs-toggle="modal" data-bs-target="#assetModal" onclick="resetAssetForm()">
-                <i class="bi bi-plus-lg me-2"></i>Add New Asset
-            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <i class="bi bi-file-earmark-excel me-2"></i>Import Excel
+                </button>
+                <button class="btn btn-primary-gradient" data-bs-toggle="modal" data-bs-target="#assetModal" onclick="resetAssetForm()">
+                    <i class="bi bi-plus-lg me-2"></i>Add New Asset
+                </button>
+            </div>
         </div>
 
         <!-- Search and Filter Bar -->
@@ -251,6 +256,45 @@ include __DIR__ . '/../layouts/sidebar.php';
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary-gradient">
                         <i class="bi bi-check-lg me-2"></i>Save Asset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade modal-glass" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/views/admin/asset_import.php" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-file-earmark-excel me-2"></i>Import Assets from Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Excel File (.xlsx)</label>
+                        <input type="file" name="import_file" class="form-control form-control-glass" accept=".xlsx" required>
+                        <small class="text-muted">Max 5MB. Only .xlsx files are supported.</small>
+                    </div>
+                    <div class="glass-card p-3" style="background: var(--md-sys-color-surface-container-low);">
+                        <h6 class="mb-2" style="font-size: 13px;"><i class="bi bi-info-circle me-1"></i>Expected Columns</h6>
+                        <div style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
+                            <code>Asset Name</code> (required), <code>Category</code> (required: Computer, Phone, Printer, Accessory),
+                            <code>Serial Number</code>, <code>Brand</code>, <code>Model</code>,
+                            <code>Purchase Date</code> (YYYY-MM-DD), <code>Purchase Price</code>, <code>Status</code>
+                        </div>
+                        <a href="/public/assets/templates/asset_import_template.xlsx" class="btn btn-outline-secondary btn-sm mt-2" download>
+                            <i class="bi bi-download me-1"></i>Download Template
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient">
+                        <i class="bi bi-upload me-2"></i>Import
                     </button>
                 </div>
             </form>
