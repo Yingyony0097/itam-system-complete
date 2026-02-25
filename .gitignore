@@ -1,0 +1,7 @@
+# Uploaded files
+public/uploads/assets/*
+public/uploads/users/*
+
+# Keep the directories
+!public/uploads/assets/.gitkeep
+!public/uploads/users/.gitkeep
