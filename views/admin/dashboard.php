@@ -203,7 +203,18 @@ include __DIR__ . '/../layouts/sidebar.php';
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="stat-label m-0"><?php echo e(tr('Total Value')); ?></p>
-                                <h2 class="stat-value m-0">₭<?php echo number_format($totalValue); ?></h2>
+                                <h2 class="stat-value m-0"><?php
+                                    if ($totalValue >= 1000000000) {
+                                        echo '₭' . number_format($totalValue / 1000000000, 1) . 'B';
+                                    } elseif ($totalValue >= 1000000) {
+                                        echo '₭' . number_format($totalValue / 1000000, 1) . 'M';
+                                    } else {
+                                        echo '₭' . number_format($totalValue);
+                                    }
+                                ?></h2>
+                                <p class="m-0" style="font-size: 11px; color: var(--md-sys-color-on-surface-variant);">
+                                    ₭<?php echo number_format($totalValue); ?>
+                                </p>
                                 <p class="m-0 mt-1" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                     <i class="bi bi-cash-stack" style="font-size: 14px;"></i>
                                     <?php echo e(tr('Asset worth')); ?>

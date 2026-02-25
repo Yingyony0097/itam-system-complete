@@ -530,6 +530,9 @@ html[lang="lo"] button {
     font-weight: 700;
     color: var(--gray-800);
     line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .stat-label {
