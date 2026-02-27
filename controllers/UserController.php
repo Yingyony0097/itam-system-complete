@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - User Controller
+ * ລະບົບ ITAM - Controller ຜູ້ໃຊ້
  */
 
 require_once __DIR__ . '/../models/User.php';
@@ -15,28 +15,28 @@ class UserController {
         $this->assetModel = new Asset();
     }
 
-    // Get all active users
+    // ດຶງຜູ້ໃຊ້ທັງໝົດ (ໃຊ້ງານ ແລະ ບໍ່ໃຊ້ງານ) ສຳລັບການຈັດການ
     public function getUsers($search = null) {
         $search = trim((string)$search);
         if ($search !== '') {
-            return $this->userModel->searchActiveUsers($search);
+            return $this->userModel->searchAllUsers($search);
         }
-        return $this->userModel->getActiveUsers();
+        return $this->userModel->getAllUsers();
     }
 
-    // Get single user
+    // ດຶງຜູ້ໃຊ້ດຽວ
     public function getUser($id) {
         return $this->userModel->find($id);
     }
 
-    // Create user
+    // ສ້າງຜູ້ໃຊ້ໃໝ່
     public function createUser($data) {
-        // Check if email exists
+        // ກວດສອບອີເມວທີ່ມີຢູ່ແລ້ວ
         if ($this->userModel->findByEmail($data['email'])) {
             return ['success' => false, 'message' => 'Email already exists'];
         }
 
-        // Validate password
+        // ກວດສອບລະຫັດຜ່ານ
         if (strlen($data['password']) < 8) {
             return ['success' => false, 'message' => 'Password must be at least 8 characters'];
         }
@@ -47,9 +47,9 @@ class UserController {
             : ['success' => false, 'message' => 'Failed to create user'];
     }
 
-    // Update user
+    // ອັບເດດຜູ້ໃຊ້
     public function updateUser($id, $data) {
-        // Check if email exists for other users
+        // ກວດສອບອີເມວຊ້ຳກັບຜູ້ໃຊ້ອື່ນ
         if (!empty($data['email'])) {
             $existing = $this->userModel->findByEmail($data['email']);
             if ($existing && $existing['user_id'] != $id) {
@@ -57,7 +57,7 @@ class UserController {
             }
         }
 
-        // If password is provided, validate and hash it
+        // ຖ້າມີລະຫັດຜ່ານ, ກວດສອບ ແລະ ເຂົ້າລະຫັດ
         if (!empty($data['password'])) {
             if (strlen($data['password']) < 8) {
                 return ['success' => false, 'message' => 'Password must be at least 8 characters'];
@@ -73,14 +73,14 @@ class UserController {
             : ['success' => false, 'message' => 'Failed to update user'];
     }
 
-    // Deactivate user
+    // ປິດການໃຊ້ງານຜູ້ໃຊ້
     public function deactivateUser($id) {
-        // Check if user has assets
+        // ກວດສອບວ່າຜູ້ໃຊ້ມີຊັບສິນບໍ່
         if ($this->userModel->hasAssets($id)) {
             return ['success' => false, 'message' => 'Cannot deactivate user with assigned assets'];
         }
 
-        // Prevent self-deactivation
+        // ປ້ອງກັນການປິດບັນຊີຕົນເອງ
         if ($id == $_SESSION['user_id']) {
             return ['success' => false, 'message' => 'You cannot deactivate your own account'];
         }
@@ -89,17 +89,56 @@ class UserController {
         return $success ? ['success' => true, 'message' => 'User deactivated successfully'] : ['success' => false, 'message' => 'Failed to deactivate user'];
     }
 
-    // Get user's assigned assets
+    // ເປີດການໃຊ້ງານຜູ້ໃຊ້ຄືນ
+    public function reactivateUser($id) {
+        $success = $this->userModel->reactivate($id);
+        return $success
+            ? ['success' => true, 'message' => 'User reactivated successfully']
+            : ['success' => false, 'message' => 'Failed to reactivate user'];
+    }
+
+    // ລຶບຜູ້ໃຊ້ຖາວອນ
+    public function deleteUser($id) {
+        // ປ້ອງກັນການລຶບບັນຊີຕົນເອງ
+        if ($id == $_SESSION['user_id']) {
+            return ['success' => false, 'message' => 'You cannot delete your own account'];
+        }
+
+        // ກວດສອບວ່າຜູ້ໃຊ້ມີຊັບສິນບໍ່
+        if ($this->userModel->hasAssets($id)) {
+            return ['success' => false, 'message' => 'Cannot delete user with assigned assets'];
+        }
+
+        $user = $this->userModel->find($id);
+        if (!$user) {
+            return ['success' => false, 'message' => 'User not found'];
+        }
+
+        // ລຶບຮູບໂປຣໄຟລ໌ຖ້າມີ
+        if (!empty($user['photo_url'])) {
+            $photoPath = __DIR__ . '/../public' . $user['photo_url'];
+            if (file_exists($photoPath)) {
+                unlink($photoPath);
+            }
+        }
+
+        $success = $this->userModel->delete($id);
+        return $success
+            ? ['success' => true, 'message' => 'User deleted permanently']
+            : ['success' => false, 'message' => 'Failed to delete user'];
+    }
+
+    // ດຶງຊັບສິນທີ່ມອບໝາຍໃຫ້ຜູ້ໃຊ້
     public function getUserAssets($userId) {
         return $this->assetModel->getByUser($userId);
     }
 
-    // Get active users for dropdown
+    // ດຶງຜູ້ໃຊ້ທີ່ໃຊ້ງານສຳລັບ dropdown
     public function getActiveUsersForSelect() {
         return $this->userModel->getActiveUsers();
     }
 
-    // Import users from Excel (.xlsx) file
+    // ນຳເຂົ້າຜູ້ໃຊ້ຈາກໄຟລ໌ Excel (.xlsx)
     public function importUsers($file) {
         if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
             return ['success' => false, 'message' => 'No file uploaded or upload error'];
@@ -132,7 +171,7 @@ class UserController {
         for ($i = 1; $i < count($rows); $i++) {
             $row = $rows[$i];
 
-            // Skip empty rows
+            // ຂ້າມແຖວເປົ່າ
             if (empty(trim($row[0] ?? ''))) continue;
 
             $name = trim($row[0] ?? '');
@@ -142,7 +181,7 @@ class UserController {
             $phone = trim($row[4] ?? '');
             $department = trim($row[5] ?? '');
 
-            // Validate required fields
+            // ກວດສອບຂໍ້ມູນທີ່ຈຳເປັນ
             if (empty($name)) {
                 $errors[] = "Row " . ($i + 1) . ": Name is required";
                 continue;
@@ -156,7 +195,7 @@ class UserController {
                 continue;
             }
 
-            // Normalize role
+            // ປັບ role
             if (!in_array($role, $validRoles)) {
                 $role = 'User';
             }

@@ -1,7 +1,7 @@
 <?php
 /**
- * ITAM System - Base Model Class
- * All models extend this class
+ * ລະບົບ ITAM - class Model ພື້ນຖານ
+ * ທຸກ Model ສືບທອດຈາກ class ນີ້
  */
 
 require_once __DIR__ . '/../config/database.php';
@@ -15,7 +15,7 @@ abstract class Model {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    // Find all records
+    // ດຶງຂໍ້ມູນທັງໝົດ
     public function all($orderBy = null) {
         $sql = "SELECT * FROM {$this->table}";
         if ($orderBy) {
@@ -25,7 +25,7 @@ abstract class Model {
         return $stmt->fetchAll();
     }
 
-    // Find by ID
+    // ຊອກຫາຕາມ ID
     public function find($id) {
         $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?";
         $stmt = $this->db->prepare($sql);
@@ -33,7 +33,7 @@ abstract class Model {
         return $stmt->fetch();
     }
 
-    // Find by specific column
+    // ຊອກຫາຕາມຄໍລຳທີ່ກຳນົດ
     public function findBy($column, $value) {
         $sql = "SELECT * FROM {$this->table} WHERE {$column} = ?";
         $stmt = $this->db->prepare($sql);
@@ -41,7 +41,7 @@ abstract class Model {
         return $stmt->fetchAll();
     }
 
-    // Find one by specific column
+    // ຊອກຫາໜຶ່ງລາຍການຕາມຄໍລຳທີ່ກຳນົດ
     public function findOneBy($column, $value) {
         $sql = "SELECT * FROM {$this->table} WHERE {$column} = ? LIMIT 1";
         $stmt = $this->db->prepare($sql);
@@ -49,7 +49,7 @@ abstract class Model {
         return $stmt->fetch();
     }
 
-    // Create new record
+    // ສ້າງລາຍການໃໝ່
     public function create($data) {
         $columns = implode(', ', array_keys($data));
         $placeholders = implode(', ', array_fill(0, count($data), '?'));
@@ -61,7 +61,7 @@ abstract class Model {
         return $this->db->lastInsertId();
     }
 
-    // Update record
+    // ອັບເດດລາຍການ
     public function update($id, $data) {
         $set = [];
         foreach ($data as $key => $value) {
@@ -78,14 +78,14 @@ abstract class Model {
         return $stmt->execute($values);
     }
 
-    // Delete record
+    // ລຶບລາຍການ
     public function delete($id) {
         $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$id]);
     }
 
-    // Count records
+    // ນັບຈຳນວນລາຍການ
     public function count($where = null, $params = []) {
         $sql = "SELECT COUNT(*) FROM {$this->table}";
         if ($where) {

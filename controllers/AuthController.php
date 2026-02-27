@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Authentication Controller
+ * ລະບົບ ITAM - Controller ການຢືນຢັນຕົວຕົນ
  */
 
 require_once __DIR__ . '/../models/User.php';
@@ -13,20 +13,17 @@ class AuthController {
         $this->userModel = new User();
     }
 
-    // Login process
+    // ຂະບວນການເຂົ້າລະບົບ
     public function login($email, $password) {
         $user = $this->userModel->authenticate($email, $password);
 
         if ($user) {
-            // Set session variables
+            // ຕັ້ງຄ່າ session
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['user_photo'] = $user['photo_url'] ?? null;
-
-            // Update last login (optional)
-            // $this->userModel->update($user['user_id'], ['last_login' => date('Y-m-d H:i:s')]);
 
             return ['success' => true, 'role' => $user['role']];
         }
@@ -34,23 +31,23 @@ class AuthController {
         return ['success' => false, 'message' => 'Invalid email or password'];
     }
 
-    // Logout process
+    // ຂະບວນການອອກຈາກລະບົບ
     public function logout() {
-        // Clear all session data
+        // ລ້າງຂໍ້ມູນ session ທັງໝົດ
         $_SESSION = [];
 
-        // Destroy session cookie
+        // ລຶບ cookie ຂອງ session
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
 
-        // Destroy session
+        // ທຳລາຍ session
         session_destroy();
 
         return true;
     }
 
-    // Change password
+    // ປ່ຽນລະຫັດຜ່ານ
     public function changePassword($userId, $currentPassword, $newPassword) {
         $user = $this->userModel->find($userId);
 
@@ -58,17 +55,17 @@ class AuthController {
             return ['success' => false, 'message' => 'User not found'];
         }
 
-        // Verify current password
+        // ກວດສອບລະຫັດຜ່ານປັດຈຸບັນ
         if (!password_verify($currentPassword, $user['password'])) {
             return ['success' => false, 'message' => 'Current password is incorrect'];
         }
 
-        // Validate new password
+        // ກວດສອບລະຫັດຜ່ານໃໝ່
         if (strlen($newPassword) < 8) {
             return ['success' => false, 'message' => 'Password must be at least 8 characters'];
         }
 
-        // Update password
+        // ອັບເດດລະຫັດຜ່ານ
         if ($this->userModel->updatePassword($userId, $newPassword)) {
             return ['success' => true, 'message' => 'Password changed successfully'];
         }

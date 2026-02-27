@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Asset Controller
+ * ລະບົບ ITAM - Controller ຊັບສິນ
  */
 
 require_once __DIR__ . '/../models/Asset.php';
@@ -15,22 +15,22 @@ class AssetController {
         $this->checkLogModel = new CheckLog();
     }
 
-    // Get all assets with filtering
+    // ດຶງຊັບສິນທັງໝົດພ້ອມການກັ່ນຕອງ
     public function getAssets($filters = []) {
         return $this->assetModel->getAllWithUsers($filters);
     }
 
-    // Get single asset
+    // ດຶງຊັບສິນດຽວ
     public function getAsset($id) {
         return $this->assetModel->find($id);
     }
 
-    // Create asset
+    // ສ້າງຊັບສິນໃໝ່
     public function createAsset($data) {
-        // Generate asset code
+        // ສ້າງລະຫັດຊັບສິນ
         $data['asset_code'] = $this->assetModel->generateAssetCode();
 
-        // Set default status
+        // ຕັ້ງສະຖານະເລີ່ມຕົ້ນ
         if (empty($data['status'])) {
             $data['status'] = STATUS_AVAILABLE;
         }
@@ -39,12 +39,12 @@ class AssetController {
         return $id ? ['success' => true, 'id' => $id, 'asset_code' => $data['asset_code']] : ['success' => false, 'message' => 'Failed to create asset'];
     }
 
-    // Update asset
+    // ອັບເດດຊັບສິນ
     public function updateAsset($id, $data) {
-        // Prevent changing asset_code
+        // ປ້ອງກັນການປ່ຽນລະຫັດຊັບສິນ
         unset($data['asset_code']);
 
-        // If status is being changed to Available, clear assignment
+        // ຖ້າສະຖານະປ່ຽນເປັນ Available, ລ້າງການມອບໝາຍ
         if (isset($data['status']) && $data['status'] === STATUS_AVAILABLE) {
             $data['assigned_to'] = null;
             $data['assigned_date'] = null;
@@ -54,50 +54,50 @@ class AssetController {
         return $success ? ['success' => true, 'message' => 'Asset updated successfully'] : ['success' => false, 'message' => 'Failed to update asset'];
     }
 
-    // Delete asset (with cascade delete for logs)
+    // ລຶບຊັບສິນ (ລຶບບັນທຶກແບບ cascade)
     public function deleteAsset($id) {
-        // Check if asset exists
+        // ກວດສອບວ່າຊັບສິນມີບໍ່
         $asset = $this->assetModel->find($id);
         if (!$asset) {
             return ['success' => false, 'message' => 'Asset not found'];
         }
 
-        // Delete photo file from disk
+        // ລຶບໄຟລ໌ຮູບພາບ
         if (!empty($asset['photo_url'])) {
             $this->deletePhoto($asset['photo_url']);
         }
 
-        // Delete check logs first (cascade)
+        // ລຶບບັນທຶກກ່ອນ (cascade)
         $this->checkLogModel->deleteByAsset($id);
 
-        // Delete asset
+        // ລຶບຊັບສິນ
         $success = $this->assetModel->delete($id);
         return $success ? ['success' => true, 'message' => 'Asset deleted successfully'] : ['success' => false, 'message' => 'Failed to delete asset'];
     }
 
-    // Upload asset photo
+    // ອັບໂຫຼດຮູບຊັບສິນ
     public function uploadPhoto($file) {
         if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
             return ['success' => false, 'message' => 'No file uploaded or upload error'];
         }
 
-        // Validate file size
+        // ກວດສອບຂະໜາດໄຟລ໌
         if ($file['size'] > MAX_FILE_SIZE) {
             return ['success' => false, 'message' => 'File size exceeds 5MB limit'];
         }
 
-        // Validate extension
+        // ກວດສອບນາມສະກຸນ
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (!in_array($ext, ALLOWED_EXTENSIONS)) {
             return ['success' => false, 'message' => 'Invalid file type. Allowed: ' . implode(', ', ALLOWED_EXTENSIONS)];
         }
 
-        // Generate unique filename
+        // ສ້າງຊື່ໄຟລ໌ທີ່ບໍ່ຊ້ຳກັນ
         $filename = 'asset_' . uniqid() . '.' . $ext;
         $uploadDir = __DIR__ . '/../public/uploads/assets/';
         $destPath = $uploadDir . $filename;
 
-        // Ensure directory exists
+        // ກວດສອບໂຟເດີ
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
@@ -109,7 +109,7 @@ class AssetController {
         return ['success' => true, 'photo_url' => '/public/uploads/assets/' . $filename];
     }
 
-    // Delete photo file from disk
+    // ລຶບໄຟລ໌ຮູບພາບ
     public function deletePhoto($photoUrl) {
         if (empty($photoUrl)) return;
         $filePath = __DIR__ . '/..' . $photoUrl;
@@ -118,9 +118,9 @@ class AssetController {
         }
     }
 
-    // Check out asset
+    // ເບີກຊັບສິນ
     public function checkOut($assetId, $userId, $notes = '') {
-        // Validate asset is available
+        // ກວດສອບວ່າຊັບສິນພ້ອມໃຊ້ບໍ່
         $asset = $this->assetModel->find($assetId);
         if (!$asset || $asset['status'] !== STATUS_AVAILABLE) {
             return ['success' => false, 'message' => 'Asset is not available for check out'];
@@ -130,9 +130,9 @@ class AssetController {
         return $success ? ['success' => true, 'message' => 'Asset checked out successfully'] : ['success' => false, 'message' => 'Failed to check out asset'];
     }
 
-    // Check in asset
+    // ຄືນຊັບສິນ
     public function checkIn($assetId, $notes = '') {
-        // Validate asset is in use
+        // ກວດສອບວ່າຊັບສິນຖືກເບີກຢູ່ບໍ່
         $asset = $this->assetModel->find($assetId);
         if (!$asset || $asset['status'] !== STATUS_IN_USE) {
             return ['success' => false, 'message' => 'Asset is not checked out'];
@@ -142,27 +142,27 @@ class AssetController {
         return $success ? ['success' => true, 'message' => 'Asset checked in successfully'] : ['success' => false, 'message' => 'Failed to check in asset'];
     }
 
-    // Get available assets for dropdown
+    // ດຶງຊັບສິນພ້ອมໃຊ້ສຳລັບ dropdown
     public function getAvailableAssets() {
         return $this->assetModel->getAvailable();
     }
 
-    // Get assets in use for dropdown
+    // ດຶງຊັບສິນກຳລັງໃຊ້ສຳລັບ dropdown
     public function getInUseAssets() {
         return $this->assetModel->getInUse();
     }
 
-    // Get statistics
+    // ດຶງສະຖິຕິ
     public function getStatistics() {
         return $this->assetModel->getStatistics();
     }
 
-    // Get category breakdown
+    // ດຶງຂໍ້ມູນແຍກຕາມປະເພດ
     public function getCategories() {
         return $this->assetModel->getByCategory();
     }
 
-    // Import assets from Excel (.xlsx) file
+    // ນຳເຂົ້າຊັບສິນຈາກໄຟລ໌ Excel (.xlsx)
     public function importAssets($file) {
         if (empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
             return ['success' => false, 'message' => 'No file uploaded or upload error'];
@@ -196,7 +196,7 @@ class AssetController {
         for ($i = 1; $i < count($rows); $i++) {
             $row = $rows[$i];
 
-            // Skip empty rows
+            // ຂ້າມແຖວເປົ່າ
             if (empty(trim($row[0] ?? ''))) continue;
 
             $assetName = trim($row[0] ?? '');
@@ -208,7 +208,7 @@ class AssetController {
             $purchasePrice = trim($row[6] ?? '0');
             $status = trim($row[7] ?? STATUS_AVAILABLE);
 
-            // Validate required fields
+            // ກວດສອບຂໍ້ມູນທີ່ຈຳເປັນ
             if (empty($assetName)) {
                 $errors[] = "Row " . ($i + 1) . ": Asset Name is required";
                 continue;
@@ -218,7 +218,7 @@ class AssetController {
                 continue;
             }
 
-            // Normalize status
+            // ປັບສະຖານະ
             if (!in_array($status, $validStatuses)) {
                 $status = STATUS_AVAILABLE;
             }

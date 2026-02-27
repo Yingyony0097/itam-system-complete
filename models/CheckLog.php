@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - CheckLog Model
+ * ລະບົບ ITAM - Model ບັນທຶກການເບີກ/ຄືນ
  */
 
 require_once __DIR__ . '/Model.php';
@@ -9,10 +9,10 @@ class CheckLog extends Model {
     protected $table = 'check_logs';
     protected $primaryKey = 'log_id';
 
-    // Get all logs with asset and user info
+    // ດຶງບັນທຶກທັງໝົດພ້ອມລາຍລະອຽດຊັບສິນ ແລະ ຜູ້ໃຊ້
     public function getAllWithDetails($limit = null) {
         $sql = "
-            SELECT cl.*, 
+            SELECT cl.*,
                    a.asset_name, a.asset_code,
                    u.name as user_name,
                    p.name as performed_by_name
@@ -31,7 +31,7 @@ class CheckLog extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get logs by asset
+    // ດຶງບັນທຶກຕາມຊັບສິນ
     public function getByAsset($assetId) {
         $sql = "
             SELECT cl.*, u.name as user_name, p.name as performed_by_name
@@ -46,7 +46,7 @@ class CheckLog extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get logs by user
+    // ດຶງບັນທຶກຕາມຜູ້ໃຊ້
     public function getByUser($userId) {
         $sql = "
             SELECT cl.*, a.asset_name, a.asset_code, p.name as performed_by_name
@@ -61,12 +61,12 @@ class CheckLog extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get recent activity for dashboard
+    // ດຶງກິດຈະກຳຫຼ້າສຸດສຳລັບແດຊບອດ
     public function getRecentActivity($limit = 5) {
         return $this->getAllWithDetails($limit);
     }
 
-    // Delete logs by asset (cascade delete)
+    // ລຶບບັນທຶກຕາມຊັບສິນ (ລຶບແບບ cascade)
     public function deleteByAsset($assetId) {
         $sql = "DELETE FROM {$this->table} WHERE asset_id = ?";
         $stmt = $this->db->prepare($sql);

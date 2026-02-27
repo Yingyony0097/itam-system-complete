@@ -1,16 +1,16 @@
 <?php
 /**
- * ITAM System - Front Controller
- * Entry point for all requests
+ * ລະບົບ ITAM - Front Controller
+ * ຈຸດເຂົ້າຫຼັກຂອງທຸກ request
  */
 
 require_once __DIR__ . '/config/config.php';
 
-// Simple routing
+// ການ routing ແບບງ່າຍ
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = str_replace('/itam-system', '', $uri);
 
-// Route to appropriate page
+// ນຳທາງໄປໜ້າທີ່ເໝາະສົມ
 switch ($uri) {
     case '/':
     case '/login':
@@ -30,12 +30,12 @@ switch ($uri) {
         break;
 
     default:
-        // Check if file exists
+        // ກວດສອບວ່າໄຟລ໌ມີຢູ່ບໍ່
         $file = __DIR__ . $uri;
         if (file_exists($file) && is_file($file)) {
             require $file;
         } else {
-            // 404 page
+            // ໜ້າ 404
             http_response_code(404);
             require __DIR__ . '/views/errors/404.php';
         }

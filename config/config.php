@@ -1,10 +1,10 @@
 <?php
 /**
- * ITAM System - Application Configuration
+ * ລະບົບ ITAM - ການຕັ້ງຄ່າແອັບພລິເຄຊັນ
  */
 
-// Session Configuration (2 hours)
-define('SESSION_TIMEOUT', 7200 );
+// ການຕັ້ງຄ່າ Session (2 ຊົ່ວໂມງ)
+define('SESSION_TIMEOUT', 7200);
 ini_set('session.gc_maxlifetime', (string) SESSION_TIMEOUT);
 ini_set('session.cookie_lifetime', (string) SESSION_TIMEOUT);
 
@@ -19,7 +19,7 @@ session_set_cookie_params([
 
 session_start();
 
-// Force logout after 2 hours of inactivity
+// ບັງຄັບອອກຈາກລະບົບຫຼັງ 2 ຊົ່ວໂມງບໍ່ມີກິດຈະກຳ
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > SESSION_TIMEOUT) {
     $_SESSION = [];
 
@@ -34,7 +34,7 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) >
 
 $_SESSION['last_activity'] = time();
 
-// Language Configuration
+// ການຕັ້ງຄ່າພາສາ
 define('LANG_EN', 'en');
 define('LANG_LO', 'lo');
 define('DEFAULT_LANG', LANG_EN);
@@ -51,7 +51,7 @@ if ($currentPath === '/views/auth/login.php' && isset($_GET['lang'])) {
         $_SESSION['lang'] = $requestedLang;
     }
 
-    // Remove `lang` from URL after switching so links stay clean.
+    // ລຶບ `lang` ຈາກ URL ຫຼັງປ່ຽນເພື່ອໃຫ້ link ສະອາດ
     $params = $_GET;
     unset($params['lang']);
 
@@ -65,40 +65,43 @@ if (!isset($_SESSION['lang']) || !in_array($_SESSION['lang'], supportedLanguages
     $_SESSION['lang'] = DEFAULT_LANG;
 }
 
-// Security Headers
+// ຫົວຄວາມປອດໄພ Clickjacking, MIME sniffing, ແລະ XSS
+// ປ້ອງກັນການໂຈມຕີ Clickjacking ໂດຍຫ້າມບໍ່ໃຫ້ເວັບໄຊທ໌ນີ້ຖືກສະແດງຢູ່ໃນ frame ຫຼື iframe ໃດໆ
+// (Prevent Clickjacking by forbidding the page to be displayed in a frame)
+
 header("X-Frame-Options: DENY");
 header("X-Content-Type-Options: nosniff");
 header("X-XSS-Protection: 1; mode=block");
 
-// Error Reporting (disable in production)
+// ການລາຍງານຂໍ້ຜິດພາດ (ປິດໃນ production)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Timezone
+// ເຂດເວລາ
 date_default_timezone_set('Asia/Vientiane');
 
-// Application Constants
+// ຄ່າຄົງທີ່ຂອງແອັບ
 define('APP_NAME', 'ITAM System');
 define('APP_VERSION', '1.0.1');
 define('COMPANY_NAME', 'P-line Company');
 define('COMPANY_LOCATION', 'Vientiane, Laos');
 
-// Asset Status
+// ສະຖານະຊັບສິນ
 define('STATUS_AVAILABLE', 'Available');
 define('STATUS_IN_USE', 'In Use');
 
-// User Roles
+// ບົດບາດຜູ້ໃຊ້
 define('ROLE_ADMIN', 'Admin');
 define('ROLE_USER', 'User');
 
-// Pagination
+// ການແບ່ງໜ້າ
 define('ITEMS_PER_PAGE', 10);
 
-// File Upload
+// ການອັບໂຫຼດໄຟລ໌
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif']);
 
-// Helper function to generate CSRF token
+// ສ້າງ CSRF token
 function generateCSRFToken() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -106,22 +109,22 @@ function generateCSRFToken() {
     return $_SESSION['csrf_token'];
 }
 
-// Helper function to validate CSRF token
+// ກວດສອບ CSRF token
 function validateCSRFToken($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
-// Helper function to sanitize output
+// ປ້ອງກັນ XSS
 function e($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
-// Helper function to get current language
+// ດຶງພາສາປັດຈຸບັນ
 function currentLang() {
     return $_SESSION['lang'] ?? DEFAULT_LANG;
 }
 
-// Translation helper
+// ແປພາສາຕາມ key
 function t($key) {
     static $translations = [
         LANG_EN => [
@@ -188,10 +191,10 @@ function t($key) {
         ?? $key;
 }
 
-// Generic UI text translation map (used for legacy hardcoded text across pages)
+// ແຜນທີ່ແປພາສາ UI ທົ່ວໄປ (ໃຊ້ສຳລັບຂໍ້ຄວາມທີ່ hardcode ໃນໜ້າຕ່າງໆ)
 function uiTextMap() {
     static $map = [
-        // Common / navigation
+        // ທົ່ວໄປ / ການນຳທາງ
         'Dashboard' => 'ແດຊບອດ',
         'Admin Dashboard' => 'ແດຊບອດຜູ້ດູແລ',
         'My Dashboard' => 'ແດຊບອດຂອງຂ້ອຍ',
@@ -210,7 +213,7 @@ function uiTextMap() {
         'P-line Company - Vientiane, Laos' => 'ບໍລິສັດ P-line - ວຽງຈັນ, ລາວ',
         'ITAM System' => 'ລະບົບ ITAM',
 
-        // Buttons / actions
+        // ປຸ່ມ / ການດຳເນີນການ
         'View All' => 'ເບິ່ງທັງໝົດ',
         'View' => 'ເບິ່ງ',
         'Add' => 'ເພີ່ມ',
@@ -241,8 +244,8 @@ function uiTextMap() {
         'Reset' => 'ຣີເຊັດ',
         'Close' => 'ປິດ',
 
-        // Roles / status
-        'Admin' => 'ແອັດມິນ',
+        // ບົດບາດ / ສະຖານະ
+        //'Admin' => 'ແອັດມິນ',
         'User' => 'ຜູ້ໃຊ້',
         'Role' => 'ສິດທິ',
         'Status' => 'ສະຖານະ',
@@ -256,7 +259,7 @@ function uiTextMap() {
         'Check-ins Only' => 'ສະເພາະການຄືນ',
         'All Activities' => 'ກິດຈະກຳທັງໝົດ',
 
-        // Dashboard cards and sections
+        // ບັດແດຊບອດ ແລະ ພາກສ່ວນ
         'Recent Activities' => 'ກິດຈະກຳຫຼ້າສຸດ',
         'Assets by Category' => 'ຊັບສິນຕາມປະເພດ',
         'Quick Actions' => 'ການດຳເນີນການດ່ວນ',
@@ -287,7 +290,7 @@ function uiTextMap() {
         'day ago' => 'ມື້ກ່ອນ',
         'days ago' => 'ມື້ກ່ອນ',
 
-        // Assets page
+        // ໜ້າຊັບສິນ
         'Manage and track all IT assets' => 'ຈັດການແລະຕິດຕາມຊັບສິນ IT ທັງໝົດ',
         'All Categories' => 'ທຸກປະເພດ',
         'All Status' => 'ທຸກສະຖານະ',
@@ -326,7 +329,7 @@ function uiTextMap() {
         'Purchase Price (₭)' => 'ລາຄາຊື້ (₭)',
         'Asset Photo' => 'ຮູບຊັບສິນ',
 
-        // Users page
+        // ໜ້າຜູ້ໃຊ້
         'User Management' => 'ການຈັດການຜູ້ໃຊ້',
         'Manage system users and permissions' => 'ຈັດການຜູ້ໃຊ້ແລະສິດທິໃນລະບົບ',
         'Search users by name or email' => 'ຄົ້ນຫາຜູ້ໃຊ້ຕາມຊື່ ຫຼື ອີເມວ',
@@ -342,7 +345,7 @@ function uiTextMap() {
         'Password' => 'ລະຫັດຜ່ານ',
         'Minimum 8 characters' => 'ຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ',
 
-        // Checkout page
+        // ໜ້າເບີກ/ຄືນ
         'Manage asset assignments' => 'ຈັດການການມອບໝາຍຊັບສິນ',
         'Check Out Asset' => 'ເບີກຊັບສິນ',
         'Check In Asset' => 'ຄືນຊັບສິນ',
@@ -370,7 +373,7 @@ function uiTextMap() {
         'Unknown' => 'ບໍ່ຮູ້ຈັກ',
         'N/A' => 'ບໍ່ມີຂໍ້ມູນ',
 
-        // History
+        // ປະຫວັດ
         'Check-In/Out History' => 'ປະຫວັດການເບີກ/ຄືນ',
         'Complete audit trail of asset movements' => 'ບັນທຶກການເຄື່ອນໄຫວຊັບສິນຢ່າງຄົບຖ້ວນ',
         'Date & Time' => 'ວັນທີ & ເວລາ',
@@ -386,7 +389,7 @@ function uiTextMap() {
         'No history records found' => 'ບໍ່ພົບບັນທຶກປະຫວັດ',
         'User:' => 'ຜູ້ໃຊ້:',
 
-        // Reports
+        // ລາຍງານ
         'Generate and export asset reports' => 'ສ້າງແລະສົ່ງອອກລາຍງານຊັບສິນ',
         'Generate and export your personal reports' => 'ສ້າງແລະສົ່ງອອກລາຍງານສ່ວນຕົວຂອງທ່ານ',
         'All Assets Report' => 'ລາຍງານຊັບສິນທັງໝົດ',
@@ -407,7 +410,7 @@ function uiTextMap() {
         'Assets currently assigned to your account with assignment and valuation details.' => 'ຊັບສິນທີ່ມອບໝາຍໃຫ້ບັນຊີຂອງທ່ານພ້ອມລາຍລະອຽດການມອບໝາຍແລະມູນຄ່າ',
         'Your check-in/check-out history with timestamps and notes.' => 'ປະຫວັດການເບີກ/ຄືນຂອງທ່ານພ້ອມເວລາແລະໝາຍເຫດ',
 
-        // Profile
+        // ໂປຣໄຟລ໌
         'My Profile' => 'ໂປຣໄຟລ໌ຂອງຂ້ອຍ',
         'Account Information' => 'ຂໍ້ມູນບັນຊີ',
         'Change Password' => 'ປ່ຽນລະຫັດຜ່ານ',
@@ -416,13 +419,13 @@ function uiTextMap() {
         'Confirm New Password' => 'ຢືນຢັນລະຫັດຜ່ານໃໝ່',
         'Member Since' => 'ເປັນສະມາຊິກຕັ້ງແຕ່',
 
-        // Error pages
+        // ໜ້າຂໍ້ຜິດພາດ
         'Access denied' => 'ປະຕິເສດການເຂົ້າເຖິງ',
         'Access Denied' => 'ປະຕິເສດການເຂົ້າເຖິງ',
         'Page Not Found' => 'ບໍ່ພົບໜ້າທີ່ຕ້ອງການ',
         'Return to Dashboard' => 'ກັບໄປແດຊບອດ',
 
-        // Auth / account
+        // ການຢືນຢັນຕົວຕົນ / ບັນຊີ
         'Login' => 'ເຂົ້າລະບົບ',
         'Sign In' => 'ເຂົ້າລະບົບ',
         'Remember me' => 'ຈື່ຂ້ອຍໄວ້',
@@ -431,7 +434,7 @@ function uiTextMap() {
         'Admin Demo' => 'ແອັດມິນທົດລອງ',
         'User Demo' => 'ຜູ້ໃຊ້ທົດລອງ',
 
-        // Toasts / server messages
+        // ຂໍ້ຄວາມແຈ້ງເຕືອນ
         'Operation successful' => 'ດຳເນີນການສຳເລັດ',
         'Operation failed' => 'ດຳເນີນການລົ້ມເຫຼວ',
         'Invalid security token' => 'ໂທເຄັນຄວາມປອດໄພບໍ່ຖືກຕ້ອງ',
@@ -479,7 +482,7 @@ function uiTextMap() {
         'Invalid report type.' => 'ປະເພດລາຍງານບໍ່ຖືກຕ້ອງ',
         'Unsupported format.' => 'ຮູບແບບທີ່ເລືອກບໍ່ຮອງຮັບ',
 
-        // Month abbreviations used in formatted dates
+        // ຕົວຫຍໍ້ເດືອນ
         'Jan' => 'ມ.ກ',
         'Feb' => 'ກ.ພ',
         'Mar' => 'ມ.ນ',
@@ -497,7 +500,7 @@ function uiTextMap() {
     return $map;
 }
 
-// Translate generic UI text using phrase mapping.
+// ແປຂໍ້ຄວາມ UI ໂດຍໃຊ້ແຜນທີ່ຄຳ
 function tr($text) {
     $text = (string)$text;
     if ($text === '' || currentLang() !== LANG_LO) {
@@ -507,12 +510,12 @@ function tr($text) {
     return strtr($text, uiTextMap());
 }
 
-// Translation map for frontend JS translation.
+// ແຜນທີ່ແປພາສາສຳລັບ JS ໃນ frontend
 function clientTextMap() {
     return currentLang() === LANG_LO ? uiTextMap() : [];
 }
 
-// Build current URL with selected language
+// ສ້າງ URL ພ້ອມພາສາທີ່ເລືອກ
 function langUrl($lang) {
     $lang = strtolower(trim((string)$lang));
     if (!in_array($lang, supportedLanguages(), true)) {
@@ -525,23 +528,23 @@ function langUrl($lang) {
     return $path . '?' . http_build_query($params);
 }
 
-// Helper function to redirect
+// ປ່ຽນເສັ້ນທາງ
 function redirect($url) {
     header("Location: " . $url);
     exit();
 }
 
-// Helper function to check if user is logged in
+// ກວດສອບວ່າຜູ້ໃຊ້ເຂົ້າລະບົບແລ້ວບໍ່
 function isLoggedIn() {
     return isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
 }
 
-// Helper function to check if user is admin
+// ກວດສອບວ່າເປັນຜູ້ດູແລບໍ່
 function isAdmin() {
     return isLoggedIn() && $_SESSION['user_role'] === ROLE_ADMIN;
 }
 
-// Helper function to require authentication
+// ບັງຄັບໃຫ້ເຂົ້າລະບົບ
 function requireAuth() {
     if (!isLoggedIn()) {
         $_SESSION['error'] = t('auth.login_required');
@@ -549,7 +552,7 @@ function requireAuth() {
     }
 }
 
-// Helper function to require admin
+// ບັງຄັບໃຫ້ເປັນຜູ້ດູແລ
 function requireAdmin() {
     requireAuth();
     if (!isAdmin()) {
@@ -558,6 +561,7 @@ function requireAdmin() {
     }
 }
 
+// ສະແດງຮູບ avatar ຜູ້ໃຊ້
 function userAvatar($size = 'default') {
     $photo = $_SESSION['user_photo'] ?? null;
     $initials = strtoupper(substr($_SESSION['user_name'] ?? '', 0, 2));

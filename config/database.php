@@ -1,7 +1,7 @@
 <?php
 /**
- * ITAM System - Database Configuration
- * Using PDO with MySQL
+ * ລະບົບ ITAM - ການຕັ້ງຄ່າຖານຂໍ້ມູນ
+ * ໃຊ້ PDO ກັບ MySQL
  */
 
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
@@ -24,8 +24,8 @@ class Database {
             ];
             $this->pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {
-            error_log("Database Connection Error: " . $e->getMessage());
-            die("Database connection failed. Please check your configuration.");
+            error_log("ຂໍ້ຜິດພາດການເຊື່ອມຕໍ່ຖານຂໍ້ມູນ: " . $e->getMessage());
+            die("ການເຊື່ອມຕໍ່ຖານຂໍ້ມູນລົ້ມເຫຼວ. ກະລຸນາກວດສອບການຕັ້ງຄ່າ.");
         }
     }
 

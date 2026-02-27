@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Asset Model
+ * ລະບົບ ITAM - Model ຊັບສິນ
  */
 
 require_once __DIR__ . '/Model.php';
@@ -9,12 +9,12 @@ class Asset extends Model {
     protected $table = 'assets';
     protected $primaryKey = 'asset_id';
 
-    // Get all assets with assigned user info
+    // ດຶງຊັບສິນທັງໝົດພ້ອມຂໍ້ມູນຜູ້ໃຊ້ທີ່ຖືກມອບໝາຍ
     public function getAllWithUsers($filters = []) {
         $sql = "
-            SELECT a.*, u.name as assigned_user_name, u.email as assigned_user_email 
-            FROM {$this->table} a 
-            LEFT JOIN users u ON a.assigned_to = u.user_id 
+            SELECT a.*, u.name as assigned_user_name, u.email as assigned_user_email
+            FROM {$this->table} a
+            LEFT JOIN users u ON a.assigned_to = u.user_id
             WHERE 1=1
         ";
         $params = [];
@@ -44,12 +44,12 @@ class Asset extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get assets by status
+    // ດຶງຊັບສິນຕາມສະຖານະ
     public function getByStatus($status) {
         return $this->findBy('status', $status);
     }
 
-    // Get assets assigned to user
+    // ດຶງຊັບສິນທີ່ມອບໝາຍໃຫ້ຜູ້ໃຊ້
     public function getByUser($userId) {
         $sql = "SELECT * FROM {$this->table} WHERE assigned_to = ? ORDER BY assigned_date DESC";
         $stmt = $this->db->prepare($sql);
@@ -57,27 +57,27 @@ class Asset extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get available assets
+    // ດຶງຊັບສິນທີ່ພ້ອมໃຊ້
     public function getAvailable() {
         return $this->getByStatus(STATUS_AVAILABLE);
     }
 
-    // Get assets in use
+    // ດຶງຊັບສິນທີ່ກຳລັງໃຊ້
     public function getInUse() {
         return $this->getByStatus(STATUS_IN_USE);
     }
 
-    // Check out asset
+    // ເບີກຊັບສິນ
     public function checkOut($assetId, $userId, $notes = '') {
         $this->db->beginTransaction();
 
         try {
-            // Update asset
+            // ອັບເດດສະຖານະຊັບສິນ
             $sql = "UPDATE {$this->table} SET status = ?, assigned_to = ?, assigned_date = CURDATE() WHERE asset_id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([STATUS_IN_USE, $userId, $assetId]);
 
-            // Create check log
+            // ສ້າງບັນທຶກການເບີກ
             $sql = "INSERT INTO check_logs (asset_id, user_id, action_type, action_date, notes, performed_by) VALUES (?, ?, 'Check Out', NOW(), ?, ?)";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$assetId, $userId, $notes, $_SESSION['user_id']]);
@@ -86,12 +86,12 @@ class Asset extends Model {
             return true;
         } catch (Exception $e) {
             $this->db->rollBack();
-            error_log("Check out error: " . $e->getMessage());
+            error_log("ຂໍ້ຜິດພາດການເບີກ: " . $e->getMessage());
             return false;
         }
     }
 
-    // Check in asset
+    // ຄືນຊັບສິນ
     public function checkIn($assetId, $notes = '') {
         $asset = $this->find($assetId);
         if (!$asset) return false;
@@ -101,12 +101,12 @@ class Asset extends Model {
         $this->db->beginTransaction();
 
         try {
-            // Update asset
+            // ອັບເດດສະຖານະຊັບສິນ
             $sql = "UPDATE {$this->table} SET status = ?, assigned_to = NULL, assigned_date = NULL WHERE asset_id = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([STATUS_AVAILABLE, $assetId]);
 
-            // Create check log
+            // ສ້າງບັນທຶກການຄືນ
             $sql = "INSERT INTO check_logs (asset_id, user_id, action_type, action_date, notes, performed_by) VALUES (?, ?, 'Check In', NOW(), ?, ?)";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$assetId, $previousUser, $notes, $_SESSION['user_id']]);
@@ -115,12 +115,12 @@ class Asset extends Model {
             return true;
         } catch (Exception $e) {
             $this->db->rollBack();
-            error_log("Check in error: " . $e->getMessage());
+            error_log("ຂໍ້ຜິດພາດການຄືນ: " . $e->getMessage());
             return false;
         }
     }
 
-    // Generate unique asset code
+    // ສ້າງລະຫັດຊັບສິນແບບອັດຕະໂນມັດ
     public function generateAssetCode() {
         $sql = "SELECT MAX(asset_id) as max_id FROM {$this->table}";
         $stmt = $this->db->query($sql);
@@ -129,7 +129,7 @@ class Asset extends Model {
         return 'AST-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
     }
 
-    // Get dashboard statistics
+    // ດຶງສະຖິຕິສຳລັບແດຊບອດ
     public function getStatistics() {
         $stats = [
             'total' => $this->count(),
@@ -137,7 +137,7 @@ class Asset extends Model {
             'in_use' => $this->count("status = ?", [STATUS_IN_USE]),
         ];
 
-        // Calculate total value
+        // ຄິດໄລ່ມູນຄ່າລວມ
         $sql = "SELECT SUM(purchase_price) as total_value FROM {$this->table}";
         $stmt = $this->db->query($sql);
         $result = $stmt->fetch();
@@ -146,14 +146,14 @@ class Asset extends Model {
         return $stats;
     }
 
-    // Get assets by category
+    // ດຶງຊັບສິນແຍກຕາມປະເພດ
     public function getByCategory() {
         $sql = "SELECT category, COUNT(*) as asset_count FROM {$this->table} WHERE category IS NOT NULL AND category != '' GROUP BY category ORDER BY asset_count DESC";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
 
-    // Get daily total asset count for the last 7 days
+    // ດຶງແນວໂນ້ມຈຳນວນຊັບສິນລວມ 7 ມື້ຫຼ້າສຸດ
     public function getDailyTrend($days = 7) {
         $sql = "
             SELECT DATE(d.day) as day_date, COUNT(a.asset_id) as total
@@ -169,7 +169,7 @@ class Asset extends Model {
         return $stmt->fetchAll();
     }
 
-    // Get daily available asset count for the last 7 days
+    // ດຶງແນວໂນ້ມຊັບສິນພ້ອມໃຊ້ 7 ມື້ຫຼ້າສຸດ
     public function getAvailableTrend($days = 7) {
         $sql = "
             SELECT DATE(d.day) as day_date,

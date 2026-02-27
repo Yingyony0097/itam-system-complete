@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Dashboard Controller
+ * ລະບົບ ITAM - Controller ແດຊບອດ
  */
 
 require_once __DIR__ . '/../models/Asset.php';
@@ -18,7 +18,7 @@ class DashboardController {
         $this->userModel = new User();
     }
 
-    // Get admin dashboard data
+    // ດຶງຂໍ້ມູນແດຊບອດຜູ້ດູແລ
     public function getAdminDashboard() {
         $stats = $this->assetModel->getStatistics();
         $recentActivity = $this->checkLogModel->getRecentActivity(5);
@@ -35,7 +35,7 @@ class DashboardController {
         ];
     }
 
-    // Get user dashboard data
+    // ດຶງຂໍ້ມູນແດຊບອດຜູ້ໃຊ້
     public function getUserDashboard($userId) {
         $myAssets = $this->assetModel->getByUser($userId);
         $myHistory = $this->checkLogModel->getByUser($userId);

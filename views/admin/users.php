@@ -25,6 +25,36 @@ if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
     redirect($redirect);
 }
 
+// Handle Delete
+if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    $result = $userController->deleteUser($_GET['delete']);
+    if ($result['success']) {
+        $_SESSION['success'] = $result['message'];
+    } else {
+        $_SESSION['error'] = $result['message'];
+    }
+    $redirect = '/views/admin/users.php';
+    if ($search !== '') {
+        $redirect .= '?search=' . urlencode($search);
+    }
+    redirect($redirect);
+}
+
+// Handle Reactivate
+if (isset($_GET['reactivate']) && is_numeric($_GET['reactivate'])) {
+    $result = $userController->reactivateUser($_GET['reactivate']);
+    if ($result['success']) {
+        $_SESSION['success'] = $result['message'];
+    } else {
+        $_SESSION['error'] = $result['message'];
+    }
+    $redirect = '/views/admin/users.php';
+    if ($search !== '') {
+        $redirect .= '?search=' . urlencode($search);
+    }
+    redirect($redirect);
+}
+
 $users = $userController->getUsers($search);
 
 $pageTitle = 'User Management';
@@ -84,7 +114,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                     </div>
                 <?php else: ?>
                     <div class="col-12 col-md-auto ms-md-auto text-muted small">
-                        Total: <?php echo count($users); ?> active user(s)
+                        Total: <?php echo count($users); ?> user(s)
                     </div>
                 <?php endif; ?>
             </form>
@@ -114,7 +144,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                         foreach ($users as $user): 
                             $assetCount = count($assetModel->getByUser($user['user_id']));
                         ?>
-                            <tr>
+                            <tr<?php if (!$user['is_active']) echo ' style="opacity: 0.6;"'; ?>>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <?php if (!empty($user['photo_url'])): ?>
@@ -143,15 +173,30 @@ include __DIR__ . '/../layouts/sidebar.php';
                                         <?php echo e($user['role']); ?>
                                     </span>
                                 </td>
-                                <td><span class="badge-custom badge-available">Active</span></td>
+                                <td>
+                                    <?php if ($user['is_active']): ?>
+                                        <span class="badge-custom badge-available">Active</span>
+                                    <?php else: ?>
+                                        <span class="badge-custom badge-disposed">Inactive</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo $assetCount; ?> assets</td>
                                 <td class="text-end">
-                                    <button class="btn-icon me-1" onclick="editUser(<?php echo htmlspecialchars(json_encode($user)); ?>)" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <?php if ($user['user_id'] !== $_SESSION['user_id']): ?>
-                                        <a href="?deactivate=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to deactivate this user?')" title="Deactivate">
-                                            <i class="bi bi-person-x"></i>
+                                    <?php if ($user['is_active']): ?>
+                                        <button class="btn-icon me-1" onclick="editUser(<?php echo htmlspecialchars(json_encode($user)); ?>)" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <?php if ($user['user_id'] !== $_SESSION['user_id']): ?>
+                                            <a href="?deactivate=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to deactivate this user?')" title="Deactivate">
+                                                <i class="bi bi-person-x"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <a href="?reactivate=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon me-1" onclick="return confirmDelete('Are you sure you want to reactivate this user?')" title="Reactivate" style="color: var(--md-sys-color-primary);">
+                                            <i class="bi bi-person-check"></i>
+                                        </a>
+                                        <a href="?delete=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to permanently delete this user? This action cannot be undone.')" title="Delete">
+                                            <i class="bi bi-trash"></i>
                                         </a>
                                     <?php endif; ?>
                                 </td>
