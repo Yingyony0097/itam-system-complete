@@ -84,33 +84,7 @@ include __DIR__ . '/../layouts/header.php';
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 24px;">
-            <p style="font-size: 12px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 12px;"><?php echo e(t('auth.demo_accounts')); ?></p>
-            <div class="d-flex gap-2 justify-content-center">
-                <button type="button" class="m3-btn-tonal-sm" onclick="fillDemo('admin')">
-                    <i class="bi bi-person-gear me-1"></i><?php echo e(t('auth.admin_demo')); ?>
-                </button>
-                <button type="button" class="m3-btn-tonal-sm secondary" onclick="fillDemo('user')">
-                    <i class="bi bi-person me-1"></i><?php echo e(t('auth.user_demo')); ?>
-                </button>
-            </div>
-        </div>
     </div>
 </div>
-
-<script>
-function fillDemo(type) {
-    const email = document.querySelector('input[name="email"]');
-    const password = document.querySelector('input[name="password"]');
-
-    if (type === 'admin') {
-        email.value = 'admin@pline.com';
-        password.value = 'password';
-    } else {
-        email.value = 'user@pline.com';
-        password.value = 'password';
-    }
-}
-</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
