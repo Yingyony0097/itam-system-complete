@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - 404 Error Page
+ * ລະບົບ ITAM - ໜ້າ 404 ບໍ່ພົບໜ້າ
  */
 require_once __DIR__ . '/../../config/config.php';
 

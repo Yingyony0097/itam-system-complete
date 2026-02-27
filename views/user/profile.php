@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - User Profile
+ * ລະບົບ ITAM - ໂປຣໄຟລ໌ຜູ້ໃຊ້
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AuthController.php';
@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../models/Asset.php';
 
 requireAuth();
 
-// Keep role-specific URLs clean.
+// ຮັກສາ URL ຕາມບົດບາດໃຫ້ສະອາດ
 if (isAdmin()) {
     redirect('/views/admin/profile.php');
 }
@@ -17,7 +17,7 @@ if (isAdmin()) {
 $userController = new UserController();
 $assetModel = new Asset();
 
-// Handle profile update
+// ຈັດການອັບເດດໂປຣໄຟລ໌
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $data = [
         'name' => $_POST['name'] ?? '',
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         'department' => $_POST['department'] ?? null
     ];
 
-    // Handle photo upload
+    // ຈັດການອັບໂຫຼດຮູບ
     $hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
     $removePhoto = !empty($_POST['remove_photo']);
 
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     redirect($_SERVER['PHP_SELF']);
 }
 
-// Handle password change
+// ຈັດການປ່ຽນລະຫັດຜ່ານ
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $auth = new AuthController();
     $result = $auth->changePassword(

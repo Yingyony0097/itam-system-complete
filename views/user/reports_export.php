@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - User Reports Export
+ * ລະບົບ ITAM - ສົ່ງອອກລາຍງານຜູ້ໃຊ້
  *
  * Generates printable HTML or CSV (Excel-friendly) reports for the
  * currently logged-in user.
@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../models/CheckLog.php';
 
 requireAuth();
 
-// Keep role-specific URLs clean.
+// ຮັກສາ URL ຕາມບົດບາດໃຫ້ສະອາດ
 if (isAdmin()) {
     redirect('/views/admin/reports_export.php?' . ($_SERVER['QUERY_STRING'] ?? ''));
 }
@@ -139,7 +139,7 @@ switch ($type) {
         break;
 
     case 'my_activity':
-        // Use a custom query to support date range and action filters.
+        // ໃຊ້ query ກຳນົດເອງເພື່ອຮອງຮັບຊ່ວງວັນທີ ແລະ ຕົວກອງ
         $sql = "
             SELECT cl.*, a.asset_name, a.asset_code, p.name AS performed_by_name
             FROM check_logs cl

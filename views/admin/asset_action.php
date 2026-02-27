@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Asset Action Handler
+ * ລະບົບ ITAM - ຕົວຈັດການການດຳເນີນການຊັບສິນ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AssetController.php';
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('/views/admin/assets.php');
 }
 
-// Validate CSRF
+// ກວດສອບ CSRF
 if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
     $_SESSION['error'] = 'Invalid security token';
     redirect('/views/admin/assets.php');
@@ -31,7 +31,7 @@ $data = [
     'status' => $_POST['status'] ?? 'Available'
 ];
 
-// Handle photo upload
+// ຈັດການອັບໂຫຼດຮູບ
 $hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
 $removePhoto = !empty($_POST['remove_photo']);
 
@@ -50,7 +50,7 @@ if ($action === 'create') {
 } else {
     $assetId = (int)($_POST['asset_id'] ?? 0);
 
-    // Delete old photo if replacing or removing
+    // ລຶບຮູບເກົ່າຖ້າປ່ຽນ ຫຼື ລຶບ
     if ($hasNewPhoto || $removePhoto) {
         $existing = $assetController->getAsset($assetId);
         if ($existing && !empty($existing['photo_url'])) {

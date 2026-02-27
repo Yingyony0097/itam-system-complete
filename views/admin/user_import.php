@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - User Import Handler
+ * ລະບົບ ITAM - ຕົວຈັດການນຳເຂົ້າຜູ້ໃຊ້
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/UserController.php';
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('/views/admin/users.php');
 }
 
-// Validate CSRF
+// ກວດສອບ CSRF
 if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
     $_SESSION['error'] = 'Invalid security token';
     redirect('/views/admin/users.php');

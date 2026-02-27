@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - User Management
+ * ລະບົບ ITAM - ການຈັດການຜູ້ໃຊ້
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/UserController.php';
@@ -10,7 +10,7 @@ requireAdmin();
 $userController = new UserController();
 $search = trim((string)($_GET['search'] ?? ''));
 
-// Handle Deactivate
+// ຈັດການປິດການໃຊ້ງານ
 if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
     $result = $userController->deactivateUser($_GET['deactivate']);
     if ($result['success']) {
@@ -25,7 +25,7 @@ if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
     redirect($redirect);
 }
 
-// Handle Delete
+// ຈັດການລຶບ
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $result = $userController->deleteUser($_GET['delete']);
     if ($result['success']) {
@@ -40,7 +40,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     redirect($redirect);
 }
 
-// Handle Reactivate
+// ຈັດການເປີດການໃຊ້ງານຄືນ
 if (isset($_GET['reactivate']) && is_numeric($_GET['reactivate'])) {
     $result = $userController->reactivateUser($_GET['reactivate']);
     if ($result['success']) {
@@ -209,7 +209,7 @@ include __DIR__ . '/../layouts/sidebar.php';
     </div>
 </div>
 
-<!-- User Modal -->
+<!-- Modal ຜູ້ໃຊ້ -->
 <div class="modal fade modal-glass" id="userModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -255,7 +255,7 @@ include __DIR__ . '/../layouts/sidebar.php';
     </div>
 </div>
 
-<!-- User Import Modal -->
+<!-- Modal ນຳເຂົ້າຜູ້ໃຊ້ -->
 <div class="modal fade modal-glass" id="userImportModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">

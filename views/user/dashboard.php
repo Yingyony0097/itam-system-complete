@@ -1,13 +1,13 @@
 <?php
 /**
- * ITAM System - User Dashboard
+ * ລະບົບ ITAM - ແດຊບອດຜູ້ໃຊ້
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/DashboardController.php';
 
 requireAuth();
 
-// Redirect admin to admin dashboard
+// ປ່ຽນເສັ້ນທາງຜູ້ດູແລໄປແດຊບອດຜູ້ດູແລ
 if (isAdmin()) {
     redirect('/views/admin/dashboard.php');
 }
@@ -62,7 +62,7 @@ function user_initials($name) {
 
     <main style="padding: 0 16px 16px 16px; min-height: calc(100vh - 120px);">
         <div class="fade-in">
-            <!-- Statistics Cards -->
+            <!-- ບັດສະຖິຕິ -->
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
                     <div class="stat-card glass-card">
@@ -115,7 +115,7 @@ function user_initials($name) {
             </div>
 
             <div class="row g-4">
-                <!-- My Assets -->
+                <!-- ຊັບສິນຂອງຂ້ອຍ -->
                 <div class="col-lg-8">
                     <div class="glass-card p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -160,7 +160,7 @@ function user_initials($name) {
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
+                <!-- ກິດຈະກຳຫຼ້າສຸດ -->
                 <div class="col-lg-4">
                     <div class="glass-card p-4 h-100">
                         <h5 class="mb-4" style="font-size: 18px; font-weight: 600; color: var(--md-sys-color-on-surface);">
@@ -201,7 +201,7 @@ function user_initials($name) {
 
     <footer class="glass-card text-center" style="margin: 0 16px 16px 16px; padding: 16px; border-radius: 12px;">
         <p class="m-0" style="font-size: 14px; color: var(--md-sys-color-on-surface-variant);">
-            &copy; 2026 ITAM System - P-line Company | Vientiane, Laos
+            &copy; 2026 ລະບົບ ITAM - ບໍລິສັດ P-line | ວຽງຈັນ, ລາວ
         </p>
     </footer>
 </div>

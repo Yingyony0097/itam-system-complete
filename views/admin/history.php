@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Check In/Out History
+ * ລະບົບ ITAM - ປະຫວັດການເບີກ/ຄືນ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../models/CheckLog.php';

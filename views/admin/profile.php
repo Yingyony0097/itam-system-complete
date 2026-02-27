@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Profile
+ * ລະບົບ ITAM - ໂປຣໄຟລ໌ຜູ້ດູແລ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AuthController.php';
@@ -12,7 +12,7 @@ requireAuth();
 $userController = new UserController();
 $assetModel = new Asset();
 
-// Handle profile update
+// ຈັດການອັບເດດໂປຣໄຟລ໌
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $data = [
         'name' => $_POST['name'] ?? '',
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         'department' => $_POST['department'] ?? null
     ];
 
-    // Handle photo upload
+    // ຈັດການອັບໂຫຼດຮູບ
     $hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
     $removePhoto = !empty($_POST['remove_photo']);
 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $uploadDir = __DIR__ . '/../../public/uploads/users/';
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
         if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-            // Delete old photo
+            // ລຶບຮູບເກົ່າ
             $existing = $userController->getUser($_SESSION['user_id']);
             if (!empty($existing['photo_url'])) {
                 $oldPath = __DIR__ . '/../..' . $existing['photo_url'];
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     redirect($_SERVER['PHP_SELF']);
 }
 
-// Handle password change
+// ຈັດການປ່ຽນລະຫັດຜ່ານ
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $auth = new AuthController();
     $result = $auth->changePassword(

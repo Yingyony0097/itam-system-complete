@@ -1,12 +1,12 @@
 <?php
 /**
- * ITAM System - User Reports
+ * ລະບົບ ITAM - ລາຍງານຜູ້ໃຊ້
  */
 require_once __DIR__ . '/../../config/config.php';
 
 requireAuth();
 
-// Keep role-specific URLs clean.
+// ຮັກສາ URL ຕາມບົດບາດໃຫ້ສະອາດ
 if (isAdmin()) {
     redirect('/views/admin/reports.php');
 }
@@ -116,7 +116,7 @@ function generateCustomReport() {
     let to = document.getElementById('toDate').value;
     const action = document.getElementById('actionType').value;
 
-    // Treat a single provided date as a 1-day range.
+    // ຖ້າລະບຸວັນທີດຽວ, ໃຊ້ເປັນຊ່ວງ 1 ມື້
     if (from && !to) to = from;
     if (to && !from) from = to;
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * ITAM System - Sidebar Navigation
+ * ລະບົບ ITAM - ແຖບນຳທາງດ້ານຂ້າງ
  */
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 $isAdmin = isAdmin();
 ?>
 
-<!-- Sidebar -->
+<!-- ແຖບນຳທາງດ້ານຂ້າງ -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <h4><i class="bi bi-box-seam me-2"></i>ITAM System</h4>

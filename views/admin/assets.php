@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Assets Management
+ * ລະບົບ ITAM - ການຈັດການຊັບສິນ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AssetController.php';
@@ -9,7 +9,7 @@ requireAdmin();
 
 $assetController = new AssetController();
 
-// Handle Delete
+// ຈັດການລຶບ
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $result = $assetController->deleteAsset($_GET['delete']);
     if ($result['success']) {
@@ -20,7 +20,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     redirect('/views/admin/assets.php');
 }
 
-// Get filters
+// ດຶງຕົວກອງ
 $filters = [
     'search' => $_GET['search'] ?? '',
     'category' => $_GET['category'] ?? '',
@@ -60,7 +60,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             </div>
         </div>
 
-        <!-- Search and Filter Bar -->
+        <!-- ແຖບຄົ້ນຫາ ແລະ ຕົວກອງ -->
         <div class="search-bar">
             <form method="GET" action="">
                 <div class="row g-3">
@@ -97,7 +97,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             </form>
         </div>
 
-        <!-- Assets Table -->
+        <!-- ຕາຕະລາງຊັບສິນ -->
         <div class="table-glass">
             <table class="table table-hover mb-0">
                 <thead>
@@ -174,7 +174,7 @@ include __DIR__ . '/../layouts/sidebar.php';
     </div>
 </div>
 
-<!-- Asset Modal -->
+<!-- Modal ຊັບສິນ -->
 <div class="modal fade modal-glass" id="assetModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -263,7 +263,7 @@ include __DIR__ . '/../layouts/sidebar.php';
     </div>
 </div>
 
-<!-- Import Modal -->
+<!-- Modal ນຳເຂົ້າ -->
 <div class="modal fade modal-glass" id="importModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -333,7 +333,7 @@ function editAsset(asset) {
     document.getElementById('assetPrice').value = asset.purchase_price;
     document.getElementById('assetStatus').value = asset.status;
 
-    // Show existing photo if any
+    // ສະແດງຮູບທີ່ມີຢູ່
     var preview = document.getElementById('photoPreview');
     var previewImg = document.getElementById('photoPreviewImg');
     var removeLabel = document.getElementById('removePhotoLabel');
@@ -352,7 +352,7 @@ function editAsset(asset) {
     new bootstrap.Modal(document.getElementById('assetModal')).show();
 }
 
-// Live preview when selecting a new photo file
+// ສະແດງຕົວຢ່າງເມື່ອເລືອກຮູບໃໝ່
 document.getElementById('assetPhoto').addEventListener('change', function(e) {
     var preview = document.getElementById('photoPreview');
     var previewImg = document.getElementById('photoPreviewImg');
@@ -367,7 +367,7 @@ document.getElementById('assetPhoto').addEventListener('change', function(e) {
 });
 
 function viewAsset(id) {
-    // Fetch asset details via AJAX or redirect to detail page
+    // ດຶງລາຍລະອຽດຊັບສິນ
     window.location.href = '/views/admin/asset_detail.php?id=' + id;
 }
 </script>

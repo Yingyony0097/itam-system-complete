@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Asset Import Handler
+ * ລະບົບ ITAM - ຕົວຈັດການນຳເຂົ້າຊັບສິນ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AssetController.php';
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('/views/admin/assets.php');
 }
 
-// Validate CSRF
+// ກວດສອບ CSRF
 if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
     $_SESSION['error'] = 'Invalid security token';
     redirect('/views/admin/assets.php');

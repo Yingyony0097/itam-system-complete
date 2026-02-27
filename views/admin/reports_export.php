@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Reports Export
+ * ລະບົບ ITAM - ສົ່ງອອກລາຍງານ
  *
  * Generates printable HTML or CSV (Excel-friendly) reports for assets,
  * users, asset value summary, and activity logs.

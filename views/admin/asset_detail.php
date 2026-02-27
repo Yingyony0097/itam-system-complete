@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Asset Detail (Admin)
+ * ລະບົບ ITAM - ລາຍລະອຽດຊັບສິນ (ຜູ້ດູແລ)
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../models/Asset.php';

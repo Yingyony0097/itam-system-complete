@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Header Layout
+ * ລະບົບ ITAM - ສ່ວນຫົວ Layout
  */
 require_once __DIR__ . '/../../config/config.php';
 
@@ -35,7 +35,7 @@ $faviconVersion = file_exists($faviconFile) ? (string)filemtime($faviconFile) : 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- Custom CSS -->
+    <!-- CSS ກຳນົດເອງ -->
     <link rel="stylesheet" href="/public/assets/css/style.css?v=<?php echo e($styleVersion); ?>">
 
     <!-- Chart.js -->

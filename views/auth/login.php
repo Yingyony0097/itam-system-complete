@@ -1,10 +1,10 @@
 <?php
 /**
- * ITAM System - Login Page
+ * ລະບົບ ITAM - ໜ້າເຂົ້າລະບົບ
  */
 require_once __DIR__ . '/../../config/config.php';
 
-// Redirect if already logged in
+// ປ່ຽນເສັ້ນທາງຖ້າເຂົ້າລະບົບແລ້ວ
 if (isLoggedIn()) {
     redirect(isAdmin() ? '/views/admin/dashboard.php' : '/views/user/dashboard.php');
 }

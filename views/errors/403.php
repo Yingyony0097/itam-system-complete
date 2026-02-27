@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - 403 Forbidden Page
+ * ລະບົບ ITAM - ໜ້າ 403 ປະຕິເສດການເຂົ້າເຖິງ
  */
 require_once __DIR__ . '/../../config/config.php';
 

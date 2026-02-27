@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Reports
+ * ລະບົບ ITAM - ລາຍງານ
  */
 require_once __DIR__ . '/../../config/config.php';
 
@@ -144,7 +144,7 @@ function generateCustomReport() {
     let to = document.getElementById('reportToDate') ? document.getElementById('reportToDate').value : '';
     const actionParam = document.getElementById('reportActionType') ? document.getElementById('reportActionType').value : '';
 
-    // Treat a single provided date as a 1-day range.
+    // ຖ້າລະບຸວັນທີດຽວ, ໃຊ້ເປັນຊ່ວງ 1 ມື້
     if (from && !to) to = from;
     if (to && !from) from = to;
 

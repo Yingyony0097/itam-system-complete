@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Admin Dashboard
+ * ລະບົບ ITAM - ແດຊບອດຜູ້ດູແລ
  *
  * This page is styled to match `Dashboard.html` provided by the user.
  */
@@ -128,7 +128,7 @@ include __DIR__ . '/../layouts/sidebar.php';
         </div>
     </header>
 
-    <!-- M3 Search Bar -->
+    <!-- ແຖບຄົ້ນຫາ M3 -->
     <div style="margin: 0 16px 16px 16px;">
         <div class="m3-search-container">
             <i class="bi bi-search m3-search-icon"></i>
@@ -391,7 +391,7 @@ include __DIR__ . '/../layouts/sidebar.php';
 
     <footer class="glass-card dashboard-footer text-center" style="margin: 0 16px 16px 16px; padding: 16px; border-radius: 12px;">
         <p class="m-0" style="font-size: 14px; color: var(--gray-600);">
-            &copy; 2026 ITAM System - P-line Company | Vientiane, Laos
+            &copy; 2026 ລະບົບ ITAM - ບໍລິສັດ P-line | ວຽງຈັນ, ລາວ
         </p>
     </footer>
 </div>
@@ -413,7 +413,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
 
-// Sparkline renderer
+// ຕົວສ້າງກາຟເສັ້ນນ້ອຍ
 function drawSparkline(canvasId, dataPoints, color) {
     var canvas = document.getElementById(canvasId);
     if (!canvas || !dataPoints || !dataPoints.length) return;

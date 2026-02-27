@@ -1,6 +1,6 @@
 <?php
 /**
- * ITAM System - Check In/Out Management
+ * ລະບົບ ITAM - ການຈັດການເບີກ/ຄືນ
  */
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../controllers/AssetController.php';
@@ -11,13 +11,13 @@ requireAdmin();
 $assetController = new AssetController();
 $userController = new UserController();
 
-// Handle Check Out
+// ຈັດການການເບີກ
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'checkout') {
     if (validateCSRFToken($_POST['csrf_token'] ?? '')) {
         $assetId = $_POST['asset_id'] ?? '';
         $userId = $_POST['user_id'] ?? '';
 
-        // Fallback for the searchable inputs: if JS didn't map IDs, parse user-entered text.
+        // ສຳຮອງ: ຖ້າ JS ບໍ່ໄດ້ map ID, ວິເຄາະຂໍ້ຄວາມທີ່ປ້ອນ
         if (!is_numeric($assetId)) {
             $assetSearch = trim((string)($_POST['asset_search'] ?? ''));
             if ($assetSearch !== '') {
@@ -82,12 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     redirect('/views/admin/checkout.php');
 }
 
-// Handle Check In
+// ຈັດການການຄືນ
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'checkin') {
     if (validateCSRFToken($_POST['csrf_token'] ?? '')) {
         $assetId = $_POST['asset_id'] ?? '';
 
-        // Fallback for the searchable input: if JS didn't map IDs, parse user-entered text.
+        // ສຳຮອງ: ຖ້າ JS ບໍ່ໄດ້ map ID, ວິເຄາະຂໍ້ຄວາມທີ່ປ້ອນ
         if (!is_numeric($assetId)) {
             $assetSearch = trim((string)($_POST['asset_search'] ?? ''));
             if ($assetSearch !== '') {
@@ -156,7 +156,7 @@ include __DIR__ . '/../layouts/sidebar.php';
         </div>
 
         <div class="row g-4">
-            <!-- Check Out -->
+            <!-- ເບີກ -->
             <div class="col-md-6">
                 <div class="glass-card p-4">
                     <h5 class="mb-4"><i class="bi bi-arrow-right-circle text-primary me-2"></i>Check Out Asset</h5>
@@ -198,7 +198,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                 </div>
             </div>
 
-            <!-- Check In -->
+            <!-- ຄືນ -->
             <div class="col-md-6">
                 <div class="glass-card p-4">
                     <h5 class="mb-4"><i class="bi bi-arrow-left-circle text-success me-2"></i>Check In Asset</h5>
@@ -239,7 +239,7 @@ include __DIR__ . '/../layouts/sidebar.php';
             </div>
         </div>
 
-        <!-- Current Assignments -->
+        <!-- ການມອບໝາຍປັດຈຸບັນ -->
         <div class="mt-4">
             <div class="glass-card p-4">
                 <h5 class="mb-4">Current Assignments</h5>
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.textContent = String(opt.label || '');
 
                 btn.addEventListener('mousedown', function (e) {
-                    // Prevent input blur before selection.
+                    // ປ້ອງກັນ blur ກ່ອນເລືອກ
                     e.preventDefault();
                     select(opt);
                 });
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Expose minimal helpers for submit validation.
+        // ສົ່ງອອກ helper ສຳລັບກວດສອບກ່ອນສົ່ງ
         return { input, hidden, setHiddenFromInput, close };
     }
 
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function () {
         inUseAssetIndex
     );
 
-    // Validate before submit (prevents confusing server error messages).
+    // ກວດສອບກ່ອນສົ່ງ (ປ້ອງກັນຂໍ້ຄວາມຜິດພາດທີ່ສັບສົນ)
     const checkoutForm = checkoutAssetAc ? checkoutAssetAc.input.closest('form') : null;
     if (checkoutForm && checkoutAssetAc && checkoutUserAc) {
         checkoutForm.addEventListener('submit', function (e) {
