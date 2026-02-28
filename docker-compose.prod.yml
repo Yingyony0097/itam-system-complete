@@ -1,0 +1,35 @@
+services:
+  web:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: itam_system
+      DB_USER: itam_user
+      DB_PASS: S3cur3_ITAM_2026!
+    depends_on:
+      - db
+    command: >
+      bash -lc "mkdir -p public/uploads/assets public/uploads/photos
+      && chown -R www-data:www-data public/uploads 2>/dev/null || true
+      && chmod -R 775 public/uploads 2>/dev/null || true
+      && apache2-foreground"
+
+  db:
+    restart: unless-stopped
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: R00t_ITAM_2026!
+      MYSQL_DATABASE: itam_system
+      MYSQL_USER: itam_user
+      MYSQL_PASSWORD: S3cur3_ITAM_2026!
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  mysql_data:
