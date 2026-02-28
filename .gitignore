@@ -1,3 +1,6 @@
+# Environment (ມີ password - ຫ້າມ push)
+.env
+
 # Codex generated files
 codex_*
 

@@ -7,10 +7,12 @@ services:
     ports:
       - "80:80"
     environment:
-      DB_HOST: db
-      DB_NAME: itam_system
-      DB_USER: itam_user
-      DB_PASS: S3cur3_ITAM_2026!
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_CHARSET: ${DB_CHARSET}
+      APP_ENV: ${APP_ENV}
     depends_on:
       - db
     command: >
@@ -23,10 +25,10 @@ services:
     restart: unless-stopped
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: R00t_ITAM_2026!
-      MYSQL_DATABASE: itam_system
-      MYSQL_USER: itam_user
-      MYSQL_PASSWORD: S3cur3_ITAM_2026!
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d:ro

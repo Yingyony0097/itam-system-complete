@@ -73,9 +73,18 @@ header("X-Frame-Options: DENY");
 header("X-Content-Type-Options: nosniff");
 header("X-XSS-Protection: 1; mode=block");
 
-// ການລາຍງານຂໍ້ຜິດພາດ (ປິດໃນ production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// ການລາຍງານຂໍ້ຜິດພາດ
+// production: ບັນທຶກລົງ log ເທົ່ານັ້ນ, ບໍ່ສະແດງຜົນໃນໜ້າຈໍ
+// development: ສະແດງຂໍ້ຜິດພາດທັງໝົດ
+if (getenv('APP_ENV') === 'production') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    ini_set('log_errors', 1);
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
 
 // ເຂດເວລາ
 date_default_timezone_set('Asia/Vientiane');
