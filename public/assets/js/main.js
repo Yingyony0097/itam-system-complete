@@ -52,10 +52,16 @@ function translateText(input) {
     return translated;
 }
 
+function isNoTranslateElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return false;
+    return !!element.closest('[data-no-translate="true"]');
+}
+
 function translateTextNode(node) {
     if (!node || node.nodeType !== Node.TEXT_NODE) return;
     const parentTag = node.parentElement ? node.parentElement.tagName : '';
     if (parentTag && ['SCRIPT', 'STYLE', 'NOSCRIPT', 'CODE', 'PRE'].includes(parentTag)) return;
+    if (isNoTranslateElement(node.parentElement)) return;
     if (!/[A-Za-z]/.test(node.nodeValue || '')) return;
 
     const translated = translateText(node.nodeValue);
@@ -66,6 +72,7 @@ function translateTextNode(node) {
 
 function translateElementAttributes(element) {
     if (!element || element.nodeType !== Node.ELEMENT_NODE) return;
+    if (isNoTranslateElement(element)) return;
 
     ITAM_TRANSLATABLE_ATTRS.forEach((attr) => {
         if (!element.hasAttribute(attr)) return;
@@ -455,7 +462,7 @@ function initGlobalSearch() {
                 ? 'color:#386A20' : 'color:#7D5700';
             return '<a href="' + item.url + '" class="m3-search-result-item">' +
                 '<i class="bi bi-box-seam" style="font-size:20px;color:var(--md-sys-color-primary)"></i>' +
-                '<div class="flex-grow-1"><div class="fw-medium">' + translateText(item.name) + '</div>' +
+                '<div class="flex-grow-1"><div class="fw-medium" data-no-translate="true">' + item.name + '</div>' +
                 '<small style="color:var(--md-sys-color-on-surface-variant)">' +
                 item.code + ' &bull; ' + translateText(item.category) + '</small></div>' +
                 '<span style="font-size:12px;font-weight:500;' + statusColor + '">' +

@@ -130,7 +130,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                                             </div>
                                         <?php endif; ?>
                                         <div>
-                                            <div class="fw-semibold"><?php echo e($asset['asset_name']); ?></div>
+                                            <div class="fw-semibold" data-no-translate="true"><?php echo e($asset['asset_name']); ?></div>
                                             <small class="text-muted"><?php echo e($asset['brand'] . ' ' . $asset['model']); ?></small>
                                         </div>
                                     </div>

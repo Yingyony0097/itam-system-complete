@@ -50,7 +50,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                                 <span class="badge-custom badge-category"><?php echo e($asset['category']); ?></span>
                                 <span class="badge-custom badge-in-use">In Use</span>
                             </div>
-                            <h5><?php echo e($asset['asset_name']); ?></h5>
+                            <h5 data-no-translate="true"><?php echo e($asset['asset_name']); ?></h5>
                             <p class="text-muted mb-3"><?php echo e($asset['brand'] . ' ' . $asset['model']); ?></p>
 
                             <div class="mb-3">

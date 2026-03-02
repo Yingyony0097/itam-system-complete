@@ -144,7 +144,7 @@ function user_initials($name) {
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1 ms-3">
-                                                <h6 class="mb-1" style="color: var(--md-sys-color-on-surface);"><?php echo e($asset['asset_name']); ?></h6>
+                                                <h6 class="mb-1" style="color: var(--md-sys-color-on-surface);" data-no-translate="true"><?php echo e($asset['asset_name']); ?></h6>
                                                 <small style="color: var(--md-sys-color-on-surface-variant);">
                                                     <?php echo e($asset['asset_code']); ?> &bull;
                                                     <?php echo e(tr($asset['category'])); ?> &bull;
@@ -183,7 +183,7 @@ function user_initials($name) {
                                             <i class="bi bi-arrow-<?php echo $isCheckOut ? 'right' : 'left'; ?>"></i>
                                         </div>
                                         <div class="activity-content">
-                                            <div class="fw-semibold" style="color: var(--md-sys-color-on-surface);"><?php echo e($activity['asset_name']); ?></div>
+                                            <div class="fw-semibold" style="color: var(--md-sys-color-on-surface);" data-no-translate="true"><?php echo e($activity['asset_name']); ?></div>
                                             <div class="small" style="color: var(--md-sys-color-on-surface-variant);">
                                                 <?php echo e(tr($activity['action_type'])); ?> &bull;
                                                 <?php echo date('M j, Y', strtotime($activity['action_date'])); ?>

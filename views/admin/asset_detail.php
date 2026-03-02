@@ -96,7 +96,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                         </span>
                     </div>
 
-                    <h4 class="mb-1"><?php echo e($asset['asset_name'] ?? ''); ?>
+                    <h4 class="mb-1" data-no-translate="true"><?php echo e($asset['asset_name'] ?? ''); ?>
                     <div class="text-muted mb-3"><?php echo e($asset['brand'] ?? ''); ?> <?php echo e($asset['model'] ?? ''); ?></div>
 
                     <div class="mb-3">

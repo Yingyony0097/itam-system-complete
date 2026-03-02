@@ -62,7 +62,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                                         <small class="text-muted"><?php echo date('g:i A', strtotime($log['action_date'])); ?></small>
                                     </td>
                                     <td>
-                                        <div class="fw-semibold"><?php echo e($log['asset_name']); ?></div>
+                                        <div class="fw-semibold" data-no-translate="true"><?php echo e($log['asset_name']); ?></div>
                                         <small class="text-muted"><?php echo e($log['asset_code']); ?></small>
                                     </td>
                                     <td>

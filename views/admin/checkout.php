@@ -268,7 +268,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                                     ?>
                                     <tr>
                                         <td>
-                                            <div class="fw-semibold"><?php echo e($asset['asset_name']); ?></div>
+                                            <div class="fw-semibold" data-no-translate="true"><?php echo e($asset['asset_name']); ?></div>
                                             <small class="text-muted"><?php echo e($asset['asset_code']); ?></small>
                                         </td>
                                         <td><?php echo $assignedUser ? e($assignedUser['name']) : 'Unknown'; ?></td>
@@ -449,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'itam-ac-item' + (idx === activeIndex ? ' active' : '');
+                btn.setAttribute('data-no-translate', 'true');
                 btn.setAttribute('role', 'option');
                 btn.setAttribute('aria-selected', idx === activeIndex ? 'true' : 'false');
                 btn.textContent = String(opt.label || '');

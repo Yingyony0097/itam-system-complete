@@ -273,7 +273,8 @@ include __DIR__ . '/../layouts/sidebar.php';
 
                                         <div class="flex-grow-1">
                                             <p class="m-0 fw-semibold" style="font-size: 14px; color: var(--md-sys-color-on-surface);">
-                                                <?php echo e(tr($activity['action_type'] ?? '')); ?>: <?php echo e($activity['asset_name'] ?? ''); ?>
+                                                <?php echo e(tr($activity['action_type'] ?? '')); ?>:
+                                                <span data-no-translate="true"><?php echo e($activity['asset_name'] ?? ''); ?></span>
                                             </p>
                                             <p class="m-0" style="font-size: 12px; color: var(--md-sys-color-on-surface-variant);">
                                                 <?php echo e($activity['user_name'] ?? ''); ?>
