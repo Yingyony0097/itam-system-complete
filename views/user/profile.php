@@ -19,12 +19,8 @@ $assetModel = new Asset();
 
 // ຈັດການອັບເດດໂປຣໄຟລ໌
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $data = [
-        'name' => $_POST['name'] ?? '',
-        'email' => $_POST['email'] ?? '',
-        'phone' => $_POST['phone'] ?? null,
-        'department' => $_POST['department'] ?? null
-    ];
+    $data = [];
+    $existing = $userController->getUser($_SESSION['user_id']);
 
     // ຈັດການອັບໂຫຼດຮູບ
     $hasNewPhoto = !empty($_FILES['photo']['tmp_name']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK;
@@ -45,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $uploadDir = __DIR__ . '/../../public/uploads/users/';
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
         if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-            $existing = $userController->getUser($_SESSION['user_id']);
             if (!empty($existing['photo_url'])) {
                 $oldPath = __DIR__ . '/../..' . $existing['photo_url'];
                 if (file_exists($oldPath)) unlink($oldPath);
@@ -53,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             $data['photo_url'] = '/public/uploads/users/' . $filename;
         }
     } elseif ($removePhoto) {
-        $existing = $userController->getUser($_SESSION['user_id']);
         if (!empty($existing['photo_url'])) {
             $oldPath = __DIR__ . '/../..' . $existing['photo_url'];
             if (file_exists($oldPath)) unlink($oldPath);
@@ -61,14 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $data['photo_url'] = null;
     }
 
+    if (!array_key_exists('photo_url', $data)) {
+        $_SESSION['info'] = 'No profile photo changes to save';
+        redirect($_SERVER['PHP_SELF']);
+    }
+
     $result = $userController->updateUser($_SESSION['user_id'], $data);
     if ($result['success']) {
-        $_SESSION['user_name'] = $data['name'];
-        $_SESSION['user_email'] = $data['email'];
-        if (array_key_exists('photo_url', $data)) {
-            $_SESSION['user_photo'] = $data['photo_url'];
-        }
-        $_SESSION['success'] = 'Profile updated successfully';
+        $_SESSION['user_photo'] = $data['photo_url'];
+        $_SESSION['success'] = 'Profile photo updated successfully';
     } else {
         $_SESSION['error'] = $result['message'];
     }
@@ -157,24 +152,25 @@ include __DIR__ . '/../layouts/sidebar.php';
             <div class="col-lg-8">
                 <div class="glass-card p-4 mb-4">
                     <h5 class="mb-4">Account Information</h5>
+                    <p class="text-muted mb-3">You can only change your profile photo on this page.</p>
                     <form method="POST" action="" enctype="multipart/form-data">
                         <input type="hidden" name="update_profile" value="1">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" name="name" class="form-control form-control-glass" value="<?php echo e($currentUser['name']); ?>" required>
+                                <input type="text" class="form-control form-control-glass" value="<?php echo e($currentUser['name']); ?>" readonly disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" name="email" class="form-control form-control-glass" value="<?php echo e($currentUser['email']); ?>" required>
+                                <input type="email" class="form-control form-control-glass" value="<?php echo e($currentUser['email']); ?>" readonly disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone</label>
-                                <input type="tel" name="phone" class="form-control form-control-glass" value="<?php echo e($currentUser['phone'] ?? ''); ?>" placeholder="e.g., +856 20 1234 5678">
+                                <input type="tel" class="form-control form-control-glass" value="<?php echo e($currentUser['phone'] ?? ''); ?>" readonly disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Department</label>
-                                <input type="text" name="department" class="form-control form-control-glass" value="<?php echo e($currentUser['department'] ?? ''); ?>" placeholder="e.g., IT, HR, Finance">
+                                <input type="text" class="form-control form-control-glass" value="<?php echo e($currentUser['department'] ?? ''); ?>" readonly disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Role</label>
@@ -201,7 +197,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                         </div>
                         <div class="mt-4">
                             <button type="submit" class="btn btn-primary-gradient">
-                                <i class="bi bi-check-lg me-2"></i>Save Changes
+                                <i class="bi bi-check-lg me-2"></i>Save Photo
                             </button>
                         </div>
                     </form>
@@ -240,4 +236,3 @@ function toggleSidebar() {
 </script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
-
