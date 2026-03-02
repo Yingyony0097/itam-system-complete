@@ -326,7 +326,7 @@ function uiTextMap() {
         'Price' => 'ລາຄາ',
         'Asset Count' => 'ຈຳນວນຊັບສິນ',
         'Total Value ($)' => 'ມູນຄ່າລວມ ($)',
-        'Serial Number' => 'ເລກຊີເຣຍວ',
+        'Serial Number' => 'ໝາຍເລກປະຈຳເຄື່ອງ',
         'Assigned To' => 'ມອບໝາຍໃຫ້',
         'Assigned Date' => 'ວັນທີມອບໝາຍ',
         'Actions' => 'ການດຳເນີນການ',
