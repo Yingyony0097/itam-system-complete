@@ -208,8 +208,8 @@ function t($key) {
 function uiTextMap() {
     static $map = [
         // ທົ່ວໄປ / ການນຳທາງ
-       // 'Dashboard' => 'ແດຊບອດ',
-        'Admin Dashboard' => 'ແດຊບອດຜູ້ດູແລ',
+       'Dashboard' => 'Dashboard',
+        'Admin Dashboard' => 'Dashboard',
         'My Dashboard' => 'ແດຊບອດຂອງຂ້ອຍ',
         'Assets' => 'ຊັບສິນ',
         'My Assets' => 'ຊັບສິນຂອງຂ້ອຍ',
