@@ -195,6 +195,10 @@ function t($key) {
     ];
 
     $lang = currentLang();
+    if ($lang === LANG_LO && $key === 'nav.dashboard') {
+        return 'Dashboard';
+    }
+
     return $translations[$lang][$key]
         ?? $translations[LANG_EN][$key]
         ?? $key;
@@ -204,7 +208,7 @@ function t($key) {
 function uiTextMap() {
     static $map = [
         // ທົ່ວໄປ / ການນຳທາງ
-        'Dashboard' => 'ແດຊບອດ',
+       // 'Dashboard' => 'ແດຊບອດ',
         'Admin Dashboard' => 'ແດຊບອດຜູ້ດູແລ',
         'My Dashboard' => 'ແດຊບອດຂອງຂ້ອຍ',
         'Assets' => 'ຊັບສິນ',
