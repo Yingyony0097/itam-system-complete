@@ -12,6 +12,11 @@ requireAuth();
 $userController = new UserController();
 $assetModel = new Asset();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !validateCSRFToken((string)($_POST['csrf_token'] ?? ''))) {
+    $_SESSION['error'] = 'Invalid request token';
+    redirect($_SERVER['PHP_SELF']);
+}
+
 // ຈັດການອັບເດດໂປຣໄຟລ໌
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $data = [
@@ -143,9 +148,12 @@ include __DIR__ . '/../layouts/sidebar.php';
                         <a href="#changePasswordSection" class="btn btn-outline-primary">
                             <i class="bi bi-key me-2"></i>Change Password
                         </a>
-                        <a href="/views/auth/logout.php" class="btn btn-outline-danger">
-                            <i class="bi bi-box-arrow-right me-2"></i>Logout
-                        </a>
+                        <form method="POST" action="/views/auth/logout.php">
+                            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -154,6 +162,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                 <div class="glass-card p-4 mb-4">
                     <h5 class="mb-4">Account Information</h5>
                     <form method="POST" action="" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         <input type="hidden" name="update_profile" value="1">
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -206,6 +215,7 @@ include __DIR__ . '/../layouts/sidebar.php';
                 <div class="glass-card p-4" id="changePasswordSection">
                     <h5 class="mb-4">Change Password</h5>
                     <form method="POST" action="">
+                        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         <input type="hidden" name="change_password" value="1">
                         <div class="mb-3">
                             <label class="form-label">Current Password</label>

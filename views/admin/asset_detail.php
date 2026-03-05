@@ -71,9 +71,14 @@ include __DIR__ . '/../layouts/sidebar.php';
                 <a href="/views/admin/assets.php" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-2"></i>Back
                 </a>
-                <a href="/views/admin/assets.php?delete=<?php echo (int)$asset['asset_id']; ?>" class="btn btn-outline-danger" onclick="return confirmDelete('Are you sure you want to delete this asset?')">
-                    <i class="bi bi-trash me-2"></i>Delete
-                </a>
+                <form method="POST" action="/views/admin/assets.php" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="asset_id" value="<?php echo (int)$asset['asset_id']; ?>">
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirmDelete('Are you sure you want to delete this asset?')">
+                        <i class="bi bi-trash me-2"></i>Delete
+                    </button>
+                </form>
             </div>
         </div>
 

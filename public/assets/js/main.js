@@ -431,6 +431,106 @@ function initGlobalSearch() {
     const searchResults = document.getElementById('globalSearchResults');
     if (!searchInput || !searchResults) return;
 
+    function asText(value) {
+        if (value === null || value === undefined) return '';
+        return String(value);
+    }
+
+    function safeSearchUrl(url) {
+        const value = asText(url).trim();
+        return value.startsWith('/') ? value : '#';
+    }
+
+    function clearSearchResults() {
+        searchResults.replaceChildren();
+    }
+
+    function renderEmptySearchResult(message) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'p-3 text-center';
+        emptyState.style.color = 'var(--md-sys-color-on-surface-variant)';
+        emptyState.textContent = message;
+        return emptyState;
+    }
+
+    function buildUserSearchResult(item) {
+        const link = document.createElement('a');
+        link.href = safeSearchUrl(item.url);
+        link.className = 'm3-search-result-item';
+
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-person-circle';
+        icon.style.cssText = 'font-size:20px;color:var(--md-sys-color-tertiary)';
+        link.appendChild(icon);
+
+        const content = document.createElement('div');
+        content.className = 'flex-grow-1';
+
+        const name = document.createElement('div');
+        name.className = 'fw-medium';
+        name.textContent = translateText(asText(item.name));
+        content.appendChild(name);
+
+        const email = document.createElement('small');
+        email.style.color = 'var(--md-sys-color-on-surface-variant)';
+        email.textContent = asText(item.email);
+        content.appendChild(email);
+
+        link.appendChild(content);
+
+        const roleValue = asText(item.role);
+        const role = document.createElement('span');
+        role.style.cssText = 'font-size:12px;font-weight:500;' +
+            (roleValue.toLowerCase() === 'admin' ? 'color:#7D5700' : 'color:#386A20');
+        role.textContent = translateText(
+            roleValue ? roleValue.charAt(0).toUpperCase() + roleValue.slice(1).toLowerCase() : ''
+        );
+        link.appendChild(role);
+
+        return link;
+    }
+
+    function buildAssetSearchResult(item) {
+        const link = document.createElement('a');
+        link.href = safeSearchUrl(item.url);
+        link.className = 'm3-search-result-item';
+
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-box-seam';
+        icon.style.cssText = 'font-size:20px;color:var(--md-sys-color-primary)';
+        link.appendChild(icon);
+
+        const content = document.createElement('div');
+        content.className = 'flex-grow-1';
+
+        const name = document.createElement('div');
+        name.className = 'fw-medium';
+        name.setAttribute('data-no-translate', 'true');
+        name.textContent = asText(item.name);
+        content.appendChild(name);
+
+        const meta = document.createElement('small');
+        meta.style.color = 'var(--md-sys-color-on-surface-variant)';
+        meta.textContent = asText(item.code) + ' | ' + translateText(asText(item.category));
+        content.appendChild(meta);
+
+        link.appendChild(content);
+
+        const status = asText(item.status);
+        const statusBadge = document.createElement('span');
+        statusBadge.style.cssText = 'font-size:12px;font-weight:500;' +
+            (status === 'Available' ? 'color:#386A20' : 'color:#7D5700');
+        statusBadge.textContent = translateText(status);
+        link.appendChild(statusBadge);
+
+        return link;
+    }
+
+    function buildSearchResultItem(item) {
+        if (!item || typeof item !== 'object') return null;
+        return item.type === 'user' ? buildUserSearchResult(item) : buildAssetSearchResult(item);
+    }
+
     const handleSearch = debounce(async function() {
         const query = searchInput.value.trim();
         if (query.length < 2) {
@@ -439,36 +539,25 @@ function initGlobalSearch() {
         }
 
         const data = await fetchData('/controllers/api_search.php?q=' + encodeURIComponent(query));
-        if (!data || !data.results || data.results.length === 0) {
-            searchResults.innerHTML = '<div class="p-3 text-center" style="color:var(--md-sys-color-on-surface-variant);">' +
-                translateText('No matches found') + '</div>';
+        clearSearchResults();
+
+        if (!data || !Array.isArray(data.results) || data.results.length === 0) {
+            searchResults.appendChild(renderEmptySearchResult(translateText('No matches found')));
             searchResults.classList.add('show');
             return;
         }
 
-        searchResults.innerHTML = data.results.map(function(item) {
-            if (item.type === 'user') {
-                var roleColor = item.role === 'admin' ? 'color:#7D5700' : 'color:#386A20';
-                return '<a href="' + item.url + '" class="m3-search-result-item">' +
-                    '<i class="bi bi-person-circle" style="font-size:20px;color:var(--md-sys-color-tertiary)"></i>' +
-                    '<div class="flex-grow-1"><div class="fw-medium">' + translateText(item.name) + '</div>' +
-                    '<small style="color:var(--md-sys-color-on-surface-variant)">' +
-                    item.email + '</small></div>' +
-                    '<span style="font-size:12px;font-weight:500;' + roleColor + '">' +
-                    translateText(item.role.charAt(0).toUpperCase() + item.role.slice(1)) + '</span>' +
-                    '</a>';
+        data.results.forEach(function(item) {
+            const element = buildSearchResultItem(item);
+            if (element) {
+                searchResults.appendChild(element);
             }
-            var statusColor = item.status === 'Available'
-                ? 'color:#386A20' : 'color:#7D5700';
-            return '<a href="' + item.url + '" class="m3-search-result-item">' +
-                '<i class="bi bi-box-seam" style="font-size:20px;color:var(--md-sys-color-primary)"></i>' +
-                '<div class="flex-grow-1"><div class="fw-medium" data-no-translate="true">' + item.name + '</div>' +
-                '<small style="color:var(--md-sys-color-on-surface-variant)">' +
-                item.code + ' &bull; ' + translateText(item.category) + '</small></div>' +
-                '<span style="font-size:12px;font-weight:500;' + statusColor + '">' +
-                translateText(item.status) + '</span>' +
-                '</a>';
-        }).join('');
+        });
+
+        if (!searchResults.children.length) {
+            searchResults.appendChild(renderEmptySearchResult(translateText('No matches found')));
+        }
+
         searchResults.classList.add('show');
     }, 300);
 

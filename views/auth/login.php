@@ -12,16 +12,20 @@ if (isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../../controllers/AuthController.php';
-
-    $auth = new AuthController();
-    $result = $auth->login($_POST['email'], $_POST['password']);
-
-    if ($result['success']) {
-        $dashboard = $result['role'] === ROLE_ADMIN ? '/views/admin/dashboard.php' : '/views/user/dashboard.php';
-        redirect($dashboard);
+    if (!validateCSRFToken((string)($_POST['csrf_token'] ?? ''))) {
+        $error = tr('Invalid request token. Please refresh and try again.');
     } else {
-        $error = tr($result['message'] ?? '');
+        require_once __DIR__ . '/../../controllers/AuthController.php';
+
+        $auth = new AuthController();
+        $result = $auth->login($_POST['email'], $_POST['password']);
+
+        if ($result['success']) {
+            $dashboard = $result['role'] === ROLE_ADMIN ? '/views/admin/dashboard.php' : '/views/user/dashboard.php';
+            redirect($dashboard);
+        } else {
+            $error = tr($result['message'] ?? '');
+        }
     }
 }
 

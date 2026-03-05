@@ -117,10 +117,13 @@ include __DIR__ . '/../layouts/sidebar.php';
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="/views/auth/logout.php" style="border-radius: 8px; padding: 10px 12px;">
-                                <i class="bi bi-box-arrow-right" style="font-size: 16px;"></i>
-                                <span>Logout</span>
-                            </a>
+                            <form method="POST" action="/views/auth/logout.php">
+                                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 text-danger" style="border-radius: 8px; padding: 10px 12px;">
+                                    <i class="bi bi-box-arrow-right" style="font-size: 16px;"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>

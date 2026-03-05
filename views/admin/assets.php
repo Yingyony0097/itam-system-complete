@@ -10,8 +10,18 @@ requireAdmin();
 $assetController = new AssetController();
 
 // ຈັດການລຶບ
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $result = $assetController->deleteAsset($_GET['delete']);
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && ($_POST['action'] ?? '') === 'delete'
+    && isset($_POST['asset_id'])
+    && is_numeric($_POST['asset_id'])
+) {
+    if (!validateCSRFToken((string)($_POST['csrf_token'] ?? ''))) {
+        $_SESSION['error'] = 'Invalid request token';
+        redirect('/views/admin/assets.php');
+    }
+
+    $result = $assetController->deleteAsset((int)$_POST['asset_id']);
     if ($result['success']) {
         $_SESSION['success'] = $result['message'];
     } else {
@@ -150,9 +160,14 @@ include __DIR__ . '/../layouts/sidebar.php';
                                     <button class="btn-icon me-1" onclick="editAsset(<?php echo htmlspecialchars(json_encode($asset)); ?>)" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <a href="?delete=<?php echo $asset['asset_id']; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to delete this asset?')" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    <form method="POST" action="" class="d-inline">
+                                        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="asset_id" value="<?php echo (int)$asset['asset_id']; ?>">
+                                        <button type="submit" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to delete this asset?')" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

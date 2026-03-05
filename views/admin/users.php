@@ -11,46 +11,42 @@ $userController = new UserController();
 $search = trim((string)($_GET['search'] ?? ''));
 
 // ຈັດການປິດການໃຊ້ງານ
-if (isset($_GET['deactivate']) && is_numeric($_GET['deactivate'])) {
-    $result = $userController->deactivateUser($_GET['deactivate']);
-    if ($result['success']) {
-        $_SESSION['success'] = $result['message'];
-    } else {
-        $_SESSION['error'] = $result['message'];
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['action'], $_POST['user_id'])
+    && is_numeric($_POST['user_id'])
+) {
+    if (!validateCSRFToken((string)($_POST['csrf_token'] ?? ''))) {
+        $_SESSION['error'] = 'Invalid request token';
+        redirect('/views/admin/users.php');
     }
-    $redirect = '/views/admin/users.php';
-    if ($search !== '') {
-        $redirect .= '?search=' . urlencode($search);
-    }
-    redirect($redirect);
-}
 
-// ຈັດການລຶບ
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $result = $userController->deleteUser($_GET['delete']);
-    if ($result['success']) {
-        $_SESSION['success'] = $result['message'];
-    } else {
-        $_SESSION['error'] = $result['message'];
-    }
-    $redirect = '/views/admin/users.php';
-    if ($search !== '') {
-        $redirect .= '?search=' . urlencode($search);
-    }
-    redirect($redirect);
-}
+    $action = (string)$_POST['action'];
+    $userId = (int)$_POST['user_id'];
+    $postSearch = trim((string)($_POST['search'] ?? ''));
 
-// ຈັດການເປີດການໃຊ້ງານຄືນ
-if (isset($_GET['reactivate']) && is_numeric($_GET['reactivate'])) {
-    $result = $userController->reactivateUser($_GET['reactivate']);
+    if ($action === 'deactivate') {
+        $result = $userController->deactivateUser($userId);
+    } elseif ($action === 'delete') {
+        $result = $userController->deleteUser($userId);
+    } elseif ($action === 'reactivate') {
+        $result = $userController->reactivateUser($userId);
+    } else {
+        $result = [
+            'success' => false,
+            'message' => 'Invalid action'
+        ];
+    }
+
     if ($result['success']) {
         $_SESSION['success'] = $result['message'];
     } else {
         $_SESSION['error'] = $result['message'];
     }
+
     $redirect = '/views/admin/users.php';
-    if ($search !== '') {
-        $redirect .= '?search=' . urlencode($search);
+    if ($postSearch !== '') {
+        $redirect .= '?search=' . urlencode($postSearch);
     }
     redirect($redirect);
 }
@@ -187,17 +183,35 @@ include __DIR__ . '/../layouts/sidebar.php';
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <?php if ($user['user_id'] !== $_SESSION['user_id']): ?>
-                                            <a href="?deactivate=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to deactivate this user?')" title="Deactivate">
-                                                <i class="bi bi-person-x"></i>
-                                            </a>
+                                            <form method="POST" action="" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                                                <input type="hidden" name="action" value="deactivate">
+                                                <input type="hidden" name="user_id" value="<?php echo (int)$user['user_id']; ?>">
+                                                <input type="hidden" name="search" value="<?php echo e($search); ?>">
+                                                <button type="submit" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to deactivate this user?')" title="Deactivate">
+                                                    <i class="bi bi-person-x"></i>
+                                                </button>
+                                            </form>
                                         <?php endif; ?>
                                     <?php else: ?>
-                                        <a href="?reactivate=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon me-1" onclick="return confirmDelete('Are you sure you want to reactivate this user?')" title="Reactivate" style="color: var(--md-sys-color-primary);">
-                                            <i class="bi bi-person-check"></i>
-                                        </a>
-                                        <a href="?delete=<?php echo $user['user_id']; ?><?php echo $search !== '' ? '&search=' . urlencode($search) : ''; ?>" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to permanently delete this user? This action cannot be undone.')" title="Delete">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <form method="POST" action="" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                                            <input type="hidden" name="action" value="reactivate">
+                                            <input type="hidden" name="user_id" value="<?php echo (int)$user['user_id']; ?>">
+                                            <input type="hidden" name="search" value="<?php echo e($search); ?>">
+                                            <button type="submit" class="btn-icon me-1" onclick="return confirmDelete('Are you sure you want to reactivate this user?')" title="Reactivate" style="color: var(--md-sys-color-primary);">
+                                                <i class="bi bi-person-check"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="user_id" value="<?php echo (int)$user['user_id']; ?>">
+                                            <input type="hidden" name="search" value="<?php echo e($search); ?>">
+                                            <button type="submit" class="btn-icon btn-icon-danger" onclick="return confirmDelete('Are you sure you want to permanently delete this user? This action cannot be undone.')" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
                                 </td>
                             </tr>
