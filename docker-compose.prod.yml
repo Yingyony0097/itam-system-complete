@@ -43,7 +43,11 @@ services:
       MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d:ro
+      # Mount SQL files in deterministic order for first-time initialization.
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./sql/add_profile_fields.sql:/docker-entrypoint-initdb.d/02_add_profile_fields.sql:ro
+      - ./sql/add_search_indexes.sql:/docker-entrypoint-initdb.d/03_add_search_indexes.sql:ro
+      - ./sql/zz_limit_privileges.sql:/docker-entrypoint-initdb.d/99_limit_privileges.sql:ro
 
 volumes:
   mysql_data:
