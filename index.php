@@ -17,6 +17,11 @@ switch ($uri) {
         redirect('/views/auth/login.php');
         break;
 
+    case '/index.php':
+        // Prevent recursive self-include when index.php is requested directly
+        redirect('/');
+        break;
+
     case '/dashboard':
         redirect(isAdmin() ? '/views/admin/dashboard.php' : '/views/user/dashboard.php');
         break;
@@ -32,8 +37,17 @@ switch ($uri) {
     default:
         // ກວດສອບວ່າໄຟລ໌ມີຢູ່ບໍ່
         $file = __DIR__ . $uri;
-        if (file_exists($file) && is_file($file)) {
-            require $file;
+        $realFile = realpath($file);
+        $rootPath = realpath(__DIR__);
+
+        if (
+            $realFile !== false &&
+            $rootPath !== false &&
+            is_file($realFile) &&
+            strpos($realFile, $rootPath . DIRECTORY_SEPARATOR) === 0 &&
+            $realFile !== __FILE__
+        ) {
+            require $realFile;
         } else {
             // ໜ້າ 404
             http_response_code(404);

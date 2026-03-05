@@ -20,6 +20,12 @@ Options -Indexes
     RewriteEngine On
     RewriteBase /
 
+    # Block hidden files/directories (except ACME challenge path)
+    RewriteRule "(^|/)\.(?!well-known/)" - [F,L]
+
+    # Block deployment/repository files
+    RewriteRule "(^|/)(docker-compose(\.prod)?\.yml|Dockerfile|deploy\.sh|README\.md)$" - [F,L,NC]
+
     # Redirect to HTTPS (uncomment in production)
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
