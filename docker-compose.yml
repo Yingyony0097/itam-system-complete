@@ -23,7 +23,10 @@ services:
 
   db:
     restart: unless-stopped
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    image: itam-system-mysql:8.4.8-secure
     environment:
       MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: itam_system
