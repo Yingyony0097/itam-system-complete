@@ -30,6 +30,35 @@ Options -Indexes
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
+    # Redirect direct GET requests from .php/.html URLs to extensionless URLs
+    RewriteCond %{REQUEST_METHOD} =GET
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php(?:[\s?]|$) [NC]
+    RewriteCond %1 !^index$ [NC]
+    RewriteCond %{DOCUMENT_ROOT}/%1.php -f
+    RewriteRule ^ %1 [R=301,L]
+
+    RewriteCond %{REQUEST_METHOD} =GET
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.html?(?:[\s?]|$) [NC]
+    RewriteCond %{DOCUMENT_ROOT}/%1.html -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/%1.htm -f
+    RewriteRule ^ %1 [R=301,L]
+
+    # Internally map extensionless URLs back to real files
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+)$ $1.php [QSA,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.+)$ $1.html [QSA,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.htm -f
+    RewriteRule ^(.+)$ $1.htm [QSA,L]
+
     # Pretty URLs
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

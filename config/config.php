@@ -44,7 +44,7 @@ function supportedLanguages() {
     return [LANG_EN, LANG_LO];
 }
 
-if ($currentPath === '/views/auth/login.php' && isset($_GET['lang'])) {
+if (in_array($currentPath, ['/views/auth/login.php', '/views/auth/login', '/login'], true) && isset($_GET['lang'])) {
     $requestedLang = strtolower(trim((string)$_GET['lang']));
 
     if (in_array($requestedLang, supportedLanguages(), true)) {
